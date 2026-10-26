@@ -1,0 +1,46 @@
+{
+  "vehicles": [
+    {
+        "title": "Mercedes E-Class",
+        "capacity": "3–4 passengers",
+        "luggage": "3 bags",
+        "features": "Wi-Fi • A/C",
+        "image": "assets/mercedes.webp"
+    },
+    {
+        "title": "Renault Clio",
+        "capacity": "3 passengers",
+        "luggage": "3 bags",
+        "features": "Wi-Fi • A/C",
+        "image": "assets/renault Clio.webp"
+    },
+    {
+        "capacity": "3 passengers",
+        "luggage": "3 bags",
+        "features": "Wi-Fi • A/C",
+        "title": "Renault Clio 2",
+        "image": "/images/uploads/gemini_generated_image_27uyl827uyl827uy.webp"
+    },
+    {
+        "capacity": "3 passengers",
+        "luggage": "3 bags",
+        "features": "Wi-Fi • A/C",
+        "title": "passat",
+        "image": "assets/passatcut.webp"
+    },
+    {
+        "title": "Mercedes E-Class",
+        "capacity": "3–4 passengers",
+        "luggage": "3 bags",
+        "features": "Wi-Fi • A/C",
+        "image": "assets/renault Clio.webp"
+    },
+    {
+        "title": "VIP Luxury Van (Test)",
+        "capacity": "7 passengers",
+        "luggage": "6 bags",
+        "features": "Leather seats • Wi-Fi",
+        "image": "assets/mercedes.webp"
+    }
+  ]
+}

@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Koprenedri Limo | Private Transfers, Made Personal</title>
+    <!-- Google Fonts: Playfair Display & Instrument Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Playfair+Display:ital,wght@0,500;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- HERO SECTION -->
+    <section class="hero-section">
+        <!-- Overlay for the background image -->
+        <div class="hero-overlay"></div>
+
+        <!-- HEADER / NAVIGATION -->
+        <header class="site-header">
+            <div class="container header-container">
+                <a href="#" class="logo-brand">
+                    <img src="assets/koprenedriLimo.svg" alt="Koprenedri Limo Logo" class="logo-icon">
+                </a>
+                
+                <nav class="desktop-nav">
+                    <a href="#routes" data-key="nav_routes">POPULAR ROUTES</a>
+                    <a href="#fleet" data-key="nav_fleet">OUR FLEET</a>
+                    <a href="#booking" data-key="nav_booking">BOOK TRANSFER</a>
+                    <a href="#how-it-works" data-key="nav_how">HOW IT WORKS</a>
+                    <a href="#faq" data-key="nav_faq">FAQ</a>
+                </nav>
+
+                <!-- Mobile Menu Pill Button with custom taller lines and gap -->
+                <button id="menuToggle" class="menu-btn-pill" aria-label="Open Menu">
+                    <span class="menu-btn-text" data-key="menu_btn">MENU</span>
+                    <div class="menu-hamburger-icon">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </button>
+            </div>
+        </header>
+
+        <!-- FULLSCREEN MENU OVERLAY (MOBILE) -->
+        <div id="menuOverlay" class="menu-overlay">
+            <div class="container menu-overlay-inner">
+                <div class="menu-overlay-header">
+                    <a href="#" class="logo-brand">
+                        <img src="assets/koprenedriLimo-black.svg" alt="Koprenedri Limo Logo" class="logo-icon">
+                    </a>
+                    <button id="menuClose" class="close-btn" aria-label="Close Menu" data-key="menu_close">
+                        CLOSE ✕
+                    </button>
+                </div>
+
+                <nav class="overlay-nav">
+                    <ul>
+                        <li><a href="#routes" class="menu-link" data-key="nav_routes">POPULAR ROUTES</a></li>
+                        <li><a href="#fleet" class="menu-link" data-key="nav_fleet">OUR FLEET</a></li>
+                        <li><a href="#booking" class="menu-link" data-key="nav_booking">BOOK TRANSFER</a></li>
+                        <li><a href="#how-it-works" class="menu-link" data-key="nav_how">HOW IT WORKS</a></li>
+                        <li><a href="#faq" class="menu-link" data-key="nav_faq">FAQ</a></li>
+                    </ul>
+                </nav>
+
+                <!-- Language Switcher Buttons underneath section links -->
+                <div class="menu-lang-switcher">
+                    <button class="lang-btn active" data-lang="en">EN</button>
+                    <button class="lang-btn" data-lang="sr">SR</button>
+                    <button class="lang-btn" data-lang="ru">RU</button>
+                    <button class="lang-btn" data-lang="fr">FR</button>
+                </div>
+
+                <div class="menu-overlay-footer">
+                    <a href="#booking" class="overlay-cta menu-link" data-key="nav_booking">BOOK TRANSFER</a>
+                    <div class="overlay-phone">+382 68 888 832</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hero Main Content -->
+        <div class="container hero-content-container">
+            <div class="hero-text-content">
+                <h1 data-key="hero_title">Private transfers,<br><em>made personal.</em></h1>
+                
+                <div class="hero-cta-group">
+                    <a href="#booking" class="btn btn-gold">
+                        <span data-key="hero_btn_book">Book your transfer</span>
+                        <img src="assets/arrow-green.png" alt="Arrow" class="btn-arrow">
+                    </a>
+                    
+                    <a href="https://wa.me/38268888832" target="_blank" class="btn btn-whatsapp-hero">
+                        <img src="assets/whatsappIcon.svg" alt="WhatsApp" class="wa-icon">
+                        <span data-key="hero_btn_wa">WhatsApp us</span>
+                    </a>
+                </div>
+
+                <div class="hero-scroll-prompt">
+                    <a href="#routes" class="view-routes-link" data-key="hero_scroll">VIEW POPULAR ROUTES</a>
+                    <div class="scroll-indicator-line">
+                        <div class="scroll-thumb"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Left Location Tag -->
+        <div class="hero-footer-location">
+            <img src="assets/location-white.svg" alt="Location Pin" class="location-pin-icon">
+            <span data-key="location_name">Petrovac, Montenegro</span>
+        </div>
+    </section>
+
+    <!-- INTRO SECTION -->
+    <section class="intro-section">
+        <div class="container intro-container">
+            <div class="intro-line top-line"></div>
+            
+            <div class="intro-text-content">
+                <h2 data-key="intro_heading">Door-to-door airport, hotel and city transfers</h2>
+                <p data-key="intro_sub">with local drivers, fixed pricing and a personal touch.</p>
+            </div>
+            
+            <div class="intro-line bottom-line"></div>
+        </div>
+    </section>
+
+    <!-- 3. POPULAR ROUTES SECTION -->
+    <section id="routes" class="routes-section">
+        <div class="container routes-container">
+            <div class="section-header">
+                <span class="sub-title" data-key="routes_subtitle">POPULAR ROUTES</span>
+                <h2 data-key="routes_title">Key destinations.<br><i>Fixed rates.</i></h2>
+            </div>
+            
+            <div class="routes-grid" id="routesGrid">
+                
+            </div>
+
+            <!-- Routes Footer Button -->
+            <div class="routes-footer" id="routesFooter">
+                <button id="toggleRoutesBtn" class="text-link-arrow" aria-expanded="false">
+                    <span id="toggleBtnText" data-key="view_all_routes">Show all routes</span>
+                    <img src="assets/arrow-black.svg" alt="" class="footer-arrow">
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. FLEET SECTION -->
+    <section id="fleet" class="fleet-section">
+        <div class="container fleet-container">
+            <div class="fleet-header-wrapper">
+                <div class="section-header">
+                    <span class="sub-title" data-key="fleet_subtitle">OUR FLEET</span>
+                    <h2 data-key="fleet_title">Modern vehicles.<br><em>Total comfort.</em></h2>
+                </div>
+                <p class="fleet-intro-desc" data-key="fleet_desc">A fleet of premium, late-model vehicles, carefully selected for your comfort, safety and style.</p>
+            </div>
+
+            <div class="fleet-grid" id="fleetGrid">
+                <div class="fleet-card">
+                    <div class="fleet-content">
+                        <h3>Mercedes E-Class</h3>
+                        <div class="vehicle-specs">
+                            <div class="spec-item">
+                                <img src="assets/user.svg" alt="Passengers" class="spec-icon">
+                                <span data-key="fleet_pax_4">3–4 passengers</span>                            
+                            </div>
+                            <div class="spec-item">
+                                <img src="assets/bag.svg" alt="Luggage" class="spec-icon">
+                                <span data-key="fleet_bags_3">3 bags</span>                            
+                            </div>
+                        </div>
+                        <div class="vehicle-features" data-key="fleet_wifi_ac">Wi-Fi • A/C</div>
+                    </div>
+                    <div class="fleet-img-wrapper">
+                        <img src="assets/mercedes.webp" alt="Mercedes E-Class">
+                    </div>
+                </div>
+
+                <div class="fleet-card">
+                    <div class="fleet-content">
+                        <h3>Renault Clio</h3>
+                        <div class="vehicle-specs">
+                            <div class="spec-item">
+                                <img src="assets/user.svg" alt="Passengers" class="spec-icon">
+                                <span data-key="fleet_pax_3">3 passengers</span>
+                            </div>
+                            <div class="spec-item">
+                                <img src="assets/bag.svg" alt="Luggage" class="spec-icon">
+                                <span data-key="fleet_bags_3">3 bags</span>
+                            </div>
+                        </div>
+                        <div class="vehicle-features" data-key="fleet_wifi_ac">Wi-Fi • A/C</div>
+                    </div>
+                    <div class="fleet-img-wrapper">
+                        <img src="assets/renault Clio.webp" alt="Renault Clio">
+                    </div>
+                </div>
+
+                <div class="fleet-card">
+                    <div class="fleet-content">
+                        <h3>Volkswagen Passat</h3>
+                        <div class="vehicle-specs">
+                            <div class="spec-item">
+                                <img src="assets/user.svg" alt="Passengers" class="spec-icon">
+                                <span data-key="fleet_pax_4">4 passengers</span>
+                            </div>
+                            <div class="spec-item">
+                                <img src="assets/bag.svg" alt="Luggage" class="spec-icon">
+                                <span data-key="fleet_bags_4">4 bags</span>
+                            </div>
+                        </div>
+                        <div class="vehicle-features" data-key="fleet_wifi_ac">Wi-Fi • A/C</div>
+                    </div>
+                    <div class="fleet-img-wrapper">
+                        <img src="assets/passatcut.webp" alt="Volkswagen Passat">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. BOOKING / INQUIRY SECTION -->
+    <section id="booking" class="booking-section">
+        <div class="container booking-container">
+            <div class="booking-wrapper">
+                
+                <div class="booking-left-column">
+                    <h2 class="section-external-title mobile-only-title" data-key="booking_title">Plan your transfer</h2>
+                    
+                    <div class="booking-form-box">
+                        <h2 class="form-title desktop-only-title" data-key="booking_title">Plan your transfer</h2>
+                        
+                            <form id="whatsappBookingForm" class="transfer-form" autocomplete="off">
+                                <!-- From & To Row -->
+                                <div class="form-group">
+                                    <label for="pickup" data-key="form_from">From *</label>
+                                    <div class="input-with-icon select-wrapper">
+                                        <img src="assets/location-white.svg" alt="Location" class="field-icon pin-icon-dark">
+                                        <select id="pickup" required autocomplete="off">
+                                            <option value="" disabled selected data-key="form_select_pickup">Select pickup location</option>
+                                            <option value="Tivat Airport">Tivat Airport</option>
+                                            <option value="Podgorica Airport">Podgorica Airport</option>
+                                            <option value="Petrovac">Petrovac</option>
+                                            <option value="Budva">Budva</option>
+                                            <option value="Kotor">Kotor</option>
+                                            <option value="Herceg Novi">Herceg Novi</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="destination" data-key="form_to">To *</label>
+                                    <div class="input-with-icon select-wrapper">
+                                        <img src="assets/location-white.svg" alt="Location" class="field-icon pin-icon-dark">
+                                        <select id="destination" required autocomplete="off">
+                                            <option value="" disabled selected data-key="form_select_dest">Select destination</option>
+                                            <option value="Tivat Airport">Tivat Airport</option>
+                                            <option value="Podgorica Airport">Podgorica Airport</option>
+                                            <option value="Petrovac">Petrovac</option>
+                                            <option value="Budva">Budva</option>
+                                            <option value="Kotor">Kotor</option>
+                                            <option value="Dubrovnik">Dubrovnik</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- Date & Time Row (50/50 Width on Mobile & Desktop) -->
+                                <div class="form-row-2">
+                                    <div class="form-group">
+                                        <label for="date" data-key="form_date">Date *</label>
+                                        <div class="input-with-icon native-icon-left">
+                                            <input type="date" id="date" required autocomplete="off">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="time" data-key="form_time">Time *</label>
+                                        <div class="input-with-icon native-icon-left">
+                                            <input type="time" id="time" required autocomplete="off">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Passengers & Luggage Row -->
+                                <div class="form-row-2">
+                                    <div class="form-group">
+                                        <label for="passengers" data-key="form_passengers">Passengers *</label>
+                                        <div class="input-with-icon select-wrapper">
+                                            <img src="assets/user.svg" alt="Passengers" class="field-icon">
+                                            <select id="passengers" required autocomplete="off">
+                                                <option value="1-4 passengers">1–4</option>
+                                                <option value="5-8 passengers">5–8</option>
+                                                <option value="8+ passengers">8+</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="luggage" data-key="form_luggage">Luggage *</label>
+                                        <div class="input-with-icon select-wrapper">
+                                            <img src="assets/bag.svg" alt="Luggage" class="field-icon">
+                                            <select id="luggage" required autocomplete="off">
+                                                <option value="0-4 bags">0–4</option>
+                                                <option value="5+ bags">5+</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Flight Number -->
+                                <div class="form-group">
+                                    <label for="flight" data-key="form_flight">Flight number (optional)</label>
+                                    <div class="input-with-icon">
+                                        <img src="assets/flight.svg" alt="Flight" class="field-icon">
+                                        <input type="text" id="flight" placeholder="eg. TMY123" autocomplete="off">
+                                    </div>
+                                </div>
+
+                                <!-- Name -->
+                                <div class="form-group">
+                                    <label for="clientName" data-key="form_name">Name *</label>
+                                    <div class="input-with-icon">
+                                        <img src="assets/user.svg" alt="Name" class="field-icon">
+                                        <input type="text" id="clientName" placeholder="Your name" required autocomplete="off">
+                                    </div>
+                                </div>
+
+                                <!-- Phone / WhatsApp -->
+                                <div class="form-group">
+                                    <label for="clientPhone" data-key="form_phone">Phone / WhatsApp *</label>
+                                    <div class="input-with-icon">
+                                        <img src="assets/phone.svg" alt="Phone" class="field-icon">
+                                        <input type="tel" id="clientPhone" placeholder="+382..." required autocomplete="off">
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="btn btn-submit-inquiry">
+                                    <img src="assets/phone-white.svg" alt="PhoneSubmit" class="submit-phone-icon">
+                                    <span data-key="form_submit">Send Inquiry</span>
+                                    <img src="assets/arrow-white.png" alt="Arrow" class="rotated-arrow">
+                                </button>
+                            </form>
+                    </div>
+                </div>
+
+                <div class="booking-right-content">
+                    <h2 data-key="booking_desc_title">Seamless journeys across Montenegro.</h2>
+                    <p data-key="booking_desc">Whether arriving at Tivat or Podgorica, our local drivers ensure a premium, stress-free transfer experience to your hotel or city destination. Fill in the form for a fast fixed-rate confirmation.</p>
+                    <div class="booking-support">
+                        <span class="support-label" data-key="booking_questions">HAVE QUESTIONS?</span>
+                        <a href="https://wa.me/38268888832" target="_blank" class="support-phone">+382 68 888 832</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. HOW IT WORKS SECTION -->
+    <section id="how-it-works" class="how-it-works-section">
+        <div class="container how-it-works-container">
+            <div class="section-header">
+                <span class="sub-title" data-key="how_subtitle">HOW IT WORKS</span>
+                <h2 data-key="how_title">3 simple steps<br>to your destination</h2>
+            </div>
+
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3 data-key="step1_title">Book</h3>
+                        <p data-key="step1_desc">Choose your route, date and time. Get an instant confirmation or quote.</p>
+                    </div>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3 data-key="step2_title">Meet your driver</h3>
+                        <p data-key="step2_desc">Your driver will be waiting for you, on time, with name sign if needed.</p>
+                    </div>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3 data-key="step3_title">Enjoy the ride</h3>
+                        <p data-key="step3_desc">Sit back, relax and enjoy the beautiful scenery of Montenegro.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. WHY CHOOSE US SECTION -->
+    <section id="why-choose-us" class="why-choose-us-section">
+        <div class="container why-choose-container">
+            <div class="why-choose-header">
+                <span class="sub-title" data-key="why_subtitle">WHY CHOOSE US</span>
+            </div>
+
+            <div class="why-choose-content-wrapper">
+                <div class="timeline-wrapper">
+                    <div class="timeline-vertical-line"></div>
+                    <ul class="timeline-list">
+                        <li>
+                            <span class="timeline-dot"></span>
+                            <p data-key="why_1">Family owned and operated</p>
+                        </li>
+                        <li>
+                            <span class="timeline-dot"></span>
+                            <p data-key="why_2">Local drivers who know the area</p>
+                        </li>
+                        <li>
+                            <span class="timeline-dot"></span>
+                            <p data-key="why_3">Clean, modern vehicles</p>
+                        </li>
+                        <li>
+                            <span class="timeline-dot"></span>
+                            <p data-key="why_4">Fixed prices (no surprises)</p>
+                        </li>
+                        <li>
+                            <span class="timeline-dot"></span>
+                            <p data-key="why_5">24/7 support</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="why-choose-right-content">
+                    <h2 data-key="why_right_title">Your reliable travel partner in Montenegro.</h2>
+                    <p data-key="why_right_desc">We are committed to delivering top-tier transfer services. Our experienced drivers have impeccable local knowledge, ensuring you arrive safely, on schedule, and in maximum comfort.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 8. FAQ SECTION -->
+    <section id="faq" class="faq-section">
+        <div class="container faq-container">
+            <div class="faq-wrapper">
+                <div class="faq-left">
+                    <span class="sub-title" data-key="faq_subtitle">FAQ</span>
+                    <h2 data-key="faq_title">Need to know something?</h2>
+                </div>
+
+                <div class="faq-right">
+                    <div class="faq-list">
+                        <div class="faq-item">
+                            <button class="faq-question" aria-expanded="false">
+                                <span data-key="faq_q1">How do I pay?</span>
+                                <span class="faq-icon">+</span>
+                            </button>
+                            <div class="faq-answer">
+                                <p data-key="faq_a1">You can pay securely in cash directly to your driver upon completion of your transfer, or via online payment methods arranged during confirmation.</p>
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <button class="faq-question" aria-expanded="false">
+                                <span data-key="faq_q2">Can I change or cancel my booking?</span>
+                                <span class="faq-icon">+</span>
+                            </button>
+                            <div class="faq-answer">
+                                <p data-key="faq_a2">Yes, you can modify or cancel your booking free of charge up to 24 hours before your scheduled pickup time by contacting us via WhatsApp.</p>
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <button class="faq-question" aria-expanded="false">
+                                <span data-key="faq_q3">Do you offer child seats?</span>
+                                <span class="faq-icon">+</span>
+                            </button>
+                            <div class="faq-answer">
+                                <p data-key="faq_a3">Yes, we provide high-quality child and baby seats for all ages to ensure safety. Please specify your requirements during the booking inquiry process.</p>
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <button class="faq-question" aria-expanded="false">
+                                <span data-key="faq_q4">Do you provide transfers to all destinations?</span>
+                                <span class="faq-icon">+</span>
+                            </button>
+                            <div class="faq-answer">
+                                <p data-key="faq_a4">We provide private transfers across Montenegro as well as to major regional airports in neighboring countries like Dubrovnik and Tirana.</p>
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <button class="faq-question" aria-expanded="false">
+                                <span data-key="faq_q5">Are your drivers local?</span>
+                                <span class="faq-icon">+</span>
+                            </button>
+                            <div class="faq-answer">
+                                <p data-key="faq_a5">All our drivers are experienced local professionals with extensive knowledge of Montenegro's roads, scenic routes, and border crossings.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 9. FOOTER SECTION -->
+    <footer id="footer" class="footer-section">
+        <div class="footer-cta-banner">
+            <div class="container cta-container">
+                <h2 data-key="cta_title">Ready for your<br>next journey?</h2>
+                <a href="https://wa.me/38268888832" target="_blank" class="btn cta-whatsapp-btn">
+                    <img src="assets/whatsappIcon.svg" alt="WhatsApp" class="wa-icon">
+                    <span data-key="cta_btn">Chat on WhatsApp</span>
+                    <img src="assets/arrow-white.png" alt="Arrow" class="btn-arrow">
+                </a>
+            </div>
+        </div>
+
+        <div class="footer-main">
+            <div class="container footer-container-centered">
+                <div class="footer-logo-centered">
+                    <img src="assets/koprenedriLimo-stacked.svg" alt="Koprenedri Limo Montenegro Transfer">
+                </div>
+
+                <div class="phone-copy-wrapper">
+                    <a href="tel:+38268888832" class="footer-phone-centered copy-phone" data-phone="+382 68 888 832">+382 68 888 832</a>
+                    <span class="copy-tooltip" id="copyTooltip">Copied!</span>
+                </div>
+                
+                <div class="footer-socials-centered">
+                    <a href="#" aria-label="Instagram" class="social-badge">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                    </a>
+                    <a href="#" aria-label="Facebook" class="social-badge">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+                    </a>
+                    <a href="https://wa.me/38268888832" target="_blank" aria-label="WhatsApp" class="social-badge">
+                        <img src="assets/whatsappIcon.svg" alt="WhatsApp" class="wa-icon">
+                    </a>
+                </div>
+
+                <div class="footer-gradient-line desktop-line-moved"></div>
+
+                <div class="footer-bottom-flex">
+                    <p class="footer-copyright" data-key="footer_copy">&copy; Koprenedri Limo. All rights reserved.</p>
+                    <div class="desktop-gradient-line-container"></div>
+                    <p class="footer-credit" data-key="footer_credit">Designed and developed for effortless travel and privacy by Nevena.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- Scroll to Top Button -->
+    <button id="scrollToTopBtn" class="scroll-to-top-btn" aria-label="Scroll to top">
+        <img src="assets/arrow-green.png" alt="Scroll to top" class="scroll-top-arrow">
+    </button>
+
+    <script src="js/script.js"></script>
+    <script src="js/lang.js"></script>
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <script>
+    // 1. Automatically load CMS homepage content
+    fetch('content/home.json')
+    .then(response => response.json())
+    .then(data => {
+        if (data.hero_title) {
+            const titleEl = document.querySelector('[data-key="hero_title"]');
+            if (titleEl) titleEl.innerHTML = data.hero_title;
+        }
+        if (data.hero_subtitle) {
+            const subtitleEl = document.querySelector('.hero-subtitle');
+            if (subtitleEl) subtitleEl.innerHTML = data.hero_subtitle;
+        }
+        if (data.hero_image) {
+            const heroSection = document.querySelector('.hero-section');
+            if (heroSection) {
+                heroSection.style.backgroundImage = `url('${data.hero_image}')`;
+                heroSection.style.backgroundSize = 'cover';
+                heroSection.style.backgroundPosition = 'center';
+            }
+        }
+    })
+    .catch(err => console.log('CMS homepage content not loaded yet:', err));
+
+    // 2. Load Fleet cards dynamically
+    async function loadFleet() {
+        try {
+            const response = await fetch('content/fleet.json');
+            const data = await response.json();
+            const grid = document.getElementById('fleetGrid');
+            
+            if (grid && data.vehicles) {
+                grid.innerHTML = '';
+                data.vehicles.forEach(car => {
+                    const cardHTML = `
+                        <div class="fleet-card">
+                            <div class="fleet-content">
+                                <h3>${car.title || ''}</h3>
+                                <div class="vehicle-specs">
+                                    <div class="spec-item">
+                                        <img src="assets/user.svg" alt="Passengers" class="spec-icon">
+                                        <span>${car.capacity || ''}</span>
+                                    </div>
+                                    <div class="spec-item">
+                                        <img src="assets/bag.svg" alt="Luggage" class="spec-icon">
+                                        <span>${car.luggage || ''}</span>
+                                    </div>
+                                </div>
+                                <div class="vehicle-features">${car.features || ''}</div>
+                            </div>
+                            <div class="fleet-img-wrapper">
+                                <img src="${car.image || ''}" alt="${car.title || 'Vehicle'}">
+                            </div>
+                        </div>
+                    `;
+                    grid.insertAdjacentHTML('beforeend', cardHTML);
+                });
+            }
+        } catch (error) {
+            console.log('Error loading fleet content:', error);
+        }
+    }
+
+    // 3. Load Popular Routes dynamically + Expansion & Multi-lang Logic
+    async function loadRoutes() {
+        try {
+            const response = await fetch('content/routes.json');
+            const data = await response.json();
+            
+            const routesSection = document.getElementById('routes');
+            const routesGrid = document.getElementById('routesGrid'); // Correct variable name
+            const routesFooter = document.getElementById('routesFooter');
+            const toggleRoutesBtn = document.getElementById('toggleRoutesBtn');
+            const toggleBtnText = document.getElementById('toggleBtnText');
+            
+            if (routesGrid && data.routes_list) {
+                let isExpanded = false;
+
+                // Render function: Shows 3 by default, or all if expanded
+                const renderCards = () => {
+                    routesGrid.innerHTML = '';
+                    const routesToDisplay = isExpanded ? data.routes_list : data.routes_list.slice(0, 3);
+                    
+                    routesToDisplay.forEach(route => {
+                        const routeHTML = `
+                            <div class="route-card">
+                                <div class="route-top">
+                                    <div class="route-info">
+                                        <h3>${route.title || ''}</h3>
+                                        <span class="route-from">${route.route_from || ''}</span>
+                                        <div class="route-details-row">
+                                            <div class="route-price">€ ${route.price || ''} <span data-key="route_oneway">(one way)</span></div>
+                                            <div class="route-time"><span class="clock-icon">⏱</span> ${route.time || ''}</div>
+                                        </div>
+                                    </div>
+                                    <a href="#booking" class="route-arrow-btn mobile-arrow" aria-label="Book Route">
+                                        <img src="assets/arrow-yellow.svg" alt="Arrow" class="rotated-arrow">
+                                    </a>
+                                </div>
+                                <div class="route-bottom">
+                                    <a href="#booking" class="book-route-link" data-key="route_book">Book route</a>
+                                    <a href="#booking" class="route-arrow-btn desktop-arrow" aria-label="Book Route">
+                                        <img src="assets/arrow-yellow.svg" alt="Arrow" class="rotated-arrow">
+                                    </a>
+                                </div>
+                            </div>
+                        `;
+                        routesGrid.insertAdjacentHTML('beforeend', routeHTML);
+                    });
+                };
+
+                // Initial render (shows strictly 3 cards)
+                renderCards();
+
+                // Handle Hide/Show footer button
+                if (routesFooter && toggleRoutesBtn) {
+                    if (data.routes_list.length <= 3) {
+                        routesFooter.style.display = 'none';
+                    } else {
+                        routesFooter.style.display = 'flex';
+                        
+                        toggleRoutesBtn.onclick = (e) => {
+                            e.preventDefault();
+                            isExpanded = !isExpanded;
+                            routesSection.classList.toggle('expanded', isExpanded);
+
+                            // Re-render cards (3 vs all)
+                            renderCards();
+
+                            const activeLangBtn = document.querySelector('.lang-btn.active');
+                            const currentLang = activeLangBtn ? activeLangBtn.getAttribute('data-lang') : 'sr';
+                            const langData = window.translations ? window.translations[currentLang] : null;
+
+                            if (isExpanded) {
+                                if (toggleBtnText) toggleBtnText.setAttribute('data-key', 'show_less_routes');
+                                if (langData && langData['show_less_routes']) {
+                                    if (toggleBtnText) toggleBtnText.textContent = langData['show_less_routes'];
+                                } else {
+                                    if (toggleBtnText) toggleBtnText.textContent = currentLang === 'fr' ? 'Voir moins de routes' : currentLang === 'ru' ? 'Скрыть маршруты' : 'Prikaži manje ruta';
+                                }
+                                
+                                setTimeout(() => {
+                                    const footerRect = routesFooter.getBoundingClientRect();
+                                    const extraSpace = window.innerWidth >= 1024 ? 80 : 40;
+                                    const targetPosition = window.pageYOffset + footerRect.top - window.innerHeight + footerRect.height + extraSpace;
+                                    
+                                    window.scrollTo({
+                                        top: targetPosition,
+                                        behavior: 'smooth'
+                                    });
+                                }, 200);
+                            } else {
+                                if (toggleBtnText) toggleBtnText.setAttribute('data-key', 'view_all_routes');
+                                if (langData && langData['view_all_routes']) {
+                                    if (toggleBtnText) toggleBtnText.textContent = langData['view_all_routes'];
+                                } else {
+                                    if (toggleBtnText) toggleBtnText.textContent = currentLang === 'fr' ? 'Voir toutes les routes' : currentLang === 'ru' ? 'Посмотреть все маршруты' : 'Prikaži sve rute';
+                                }
+                                
+                                routesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            }
+                        };
+                    }
+                }
+            }
+        } catch (error) {
+            console.log('Error loading routes content:', error);
+        }
+    }
+
+    // Run loaders when page opens
+    document.addEventListener('DOMContentLoaded', () => {
+        loadFleet();
+        loadRoutes();
+    });
+</script>
+</body>
+</html>

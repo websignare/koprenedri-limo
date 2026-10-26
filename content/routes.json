@@ -1,0 +1,40 @@
+{
+  "routes_list": [
+    {
+      "title": "1 Tivat Airport",
+      "route_from": "From Petrovac",
+      "price": "70",
+      "time": "50 mins"
+    },
+    {
+      "title": "2 Podgorica Airport",
+      "route_from": "From Budva",
+      "price": "100",
+      "time": "1h 30 mins"
+    },
+    {
+      "title": "3 Kotor",
+      "route_from": "From Tivat",
+      "price": "40",
+      "time": "30 mins"
+    },
+    {
+      "title": "4 Tivat Airport",
+      "route_from": "From Petrovac",
+      "price": "70",
+      "time": "50 mins"
+    },
+    {
+      "title": "5 Podgorica Airport",
+      "route_from": "From Budva",
+      "price": "100",
+      "time": "1h 30 mins"
+    },
+    {
+      "title": "6 Kotor",
+      "route_from": "From Tivat",
+      "price": "40",
+      "time": "30 mins"
+    }
+  ]
+}
