@@ -2,25 +2,25 @@ backend:
   name: git-gateway
   branch: main
 
-media_folder: "koprenedriLimo/images/uploads"
+media_folder: "images/uploads"
 public_folder: "/images/uploads"
 
 collections:
   - name: "pages"
     label: "Pages"
     files:
-      - file: "koprenedriLimo/content/home.json"
+      - file: "content/home.json"
         label: "Home Page Content"
         name: "home"
         fields:
-          - {label: "Main Hero Title", name: "hero_title", widget: "string"}
-          - {label: "Hero Subtitle", name: "hero_subtitle", widget: "text"}
-          - {label: "Hero Background Image", name: "hero_image", widget: "image"}
+          - { label: "Main Hero Title", name: "hero_title", widget: "string" }
+          - { label: "Hero Subtitle", name: "hero_subtitle", widget: "text" }
+          - { label: "Hero Background Image", name: "hero_image", widget: "image" }
 
   - name: "fleet"
     label: "Fleet / Transfer Cards"
     files:
-      - file: "koprenedriLimo/content/fleet.json"
+      - file: "content/fleet.json"
         label: "Fleet Vehicles"
         name: "fleet_items"
         fields:
@@ -28,16 +28,16 @@ collections:
             name: "vehicles"
             widget: "list"
             fields:
-              - {label: "Vehicle Name", name: "title", widget: "string"}
-              - {label: "Passenger Capacity", name: "capacity", widget: "string"}
-              - {label: "Luggage Capacity", name: "luggage", widget: "string"}
-              - {label: "Features", name: "features", widget: "string"}
-              - {label: "Vehicle Image", name: "image", widget: "image"}
+              - { label: "Vehicle Name", name: "title", widget: "string" }
+              - { label: "Passenger Capacity", name: "capacity", widget: "string" }
+              - { label: "Luggage Capacity", name: "luggage", widget: "string" }
+              - { label: "Features", name: "features", widget: "string" }
+              - { label: "Vehicle Image", name: "image", widget: "image" }
 
   - name: "routes"
     label: "Popular Routes"
     files:
-      - file: "koprenedriLimo/content/routes.json"
+      - file: "content/routes.json"
         label: "Route Cards"
         name: "route_items"
         fields:
@@ -45,7 +45,7 @@ collections:
             name: "routes_list"
             widget: "list"
             fields:
-              - {label: "Destination Name", name: "title", widget: "string"}
-              - {label: "From Location", name: "route_from", widget: "string"}
-              - {label: "Price (€)", name: "price", widget: "string"}
-              - {label: "Travel Time", name: "time", widget: "string"}
+              - { label: "Destination Name", name: "title", widget: "string" }
+              - { label: "From Location", name: "route_from", widget: "string" }
+              - { label: "Price (€)", name: "price", widget: "string" }
+              - { label: "Travel Time", name: "time", widget: "string" }

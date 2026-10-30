@@ -1238,11 +1238,19 @@ a {
     transition: transform 0.4s ease;
 }
 .routes-grid{
-    margin-bottom: 2rem;
+    margin-bottom: 0rem;
 }
 /* Add margin-bottom ONLY when the section is expanded */
 .routes-section.expanded .routes-grid {
-    margin-bottom: 2rem; 
+    margin-bottom: 0rem; 
+}
+@media (max-width: 758px) {
+    .routes-grid{
+        margin-bottom: -1.5rem;
+    }
+    .routes-section.expanded .routes-grid {
+        margin-bottom: 1rem; 
+    }   
 }
 
 /* 2. Base card smooth transition for transform and filter */
