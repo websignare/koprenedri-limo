@@ -1,7 +1,68 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // ==========================================
-    // 0. ENSURE PAGE STARTS AT THE TOP ON RELOAD
-    // ==========================================
+    const SANITY_PROJECT_ID = 'YOUR_SANITY_PROJECT_ID';
+    const DATASET = 'production';
+    const API_URL = `https://${SANITY_PROJECT_ID}.api.sanity.io/v2021-10-21/data/query/${DATASET}?query=`;
+
+    // Fetch and render Fleet Vehicles
+    const fetchFleet = async () => {
+        const query = encodeURIComponent(`*[_type == "fleet"]{name, passengerCapacity, luggageCapacity, description, "imageUrl": image.asset->url}`);
+        try {
+            const res = await fetch(API_URL + query);
+            const { result } = await res.json();
+            const grid = document.getElementById('fleetGrid');
+
+            if (grid && result && result.length > 0) {
+                grid.innerHTML = result.map(car => `
+                    <div class="fleet-card">
+                        <div class="fleet-content">
+                            <h3>${car.name}</h3>
+                            <div class="vehicle-specs">
+                                <span>👥 ${car.passengerCapacity}</span>
+                                <span>🧳 ${car.luggageCapacity}</span>
+                            </div>
+                            <p>${car.description || ''}</p>
+                        </div>
+                        <div class="fleet-img-wrapper">
+                            ${car.imageUrl ? `<img src="${car.imageUrl}" alt="${car.name}">` : ''}
+                        </div>
+                    </div>
+                `).join('');
+            }
+        } catch (err) {
+            console.error("Error fetching fleet:", err);
+        }
+    };
+
+    // Fetch and render Popular Routes
+    const fetchRoutes = async () => {
+        const query = encodeURIComponent(`*[_type == "route"]{destination, departure, price, duration}`);
+        try {
+            const res = await fetch(API_URL + query);
+            const { result } = await res.json();
+            const grid = document.getElementById('routesGrid');
+
+            if (grid && result && result.length > 0) {
+                grid.innerHTML = result.map(route => `
+                    <div class="route-card">
+                        <div class="route-info">
+                            <h3>${route.destination}</h3>
+                            <span class="route-from">From ${route.departure}</span>
+                            <div class="route-details-row">
+                                <div class="route-price">€${route.price}</div>
+                                <div class="route-time">⏱ ~ ${route.duration}</div>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        } catch (err) {
+            console.error("Error fetching routes:", err);
+        }
+    };
+
+    // Initialize Sanity fetching
+    fetchFleet();
+    fetchRoutes();
     if ('scrollRestoration' in history) {
         history.scrollRestoration = 'manual';
     }
