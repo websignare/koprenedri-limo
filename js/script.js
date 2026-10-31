@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const SANITY_PROJECT_ID = 'YOUR_SANITY_PROJECT_ID';
+    const SANITY_PROJECT_ID = 'b3mwp543';
     const DATASET = 'production';
     const API_URL = `https://${SANITY_PROJECT_ID}.api.sanity.io/v2021-10-21/data/query/${DATASET}?query=`;
 
