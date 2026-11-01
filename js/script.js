@@ -17,10 +17,16 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="fleet-content">
                             <h3>${car.name}</h3>
                             <div class="vehicle-specs">
-                                <span>👥 ${car.passengerCapacity}</span>
-                                <span>🧳 ${car.luggageCapacity}</span>
+                                <div class="spec-item">
+                                    <img src="assets/user.svg" alt="Passengers" class="spec-icon">
+                                    <span>${car.passengerCapacity || ''}</span>
+                                </div>
+                                <div class="spec-item">
+                                    <img src="assets/bag.svg" alt="Luggage" class="spec-icon">
+                                    <span>${car.luggageCapacity || ''}</span>
+                                </div>
                             </div>
-                            <p>${car.description || ''}</p>
+                            <div class="vehicle-features">${car.description || ''}</div>
                         </div>
                         <div class="fleet-img-wrapper">
                             ${car.imageUrl ? `<img src="${car.imageUrl}" alt="${car.name}">` : ''}
@@ -40,20 +46,58 @@ document.addEventListener('DOMContentLoaded', () => {
             const res = await fetch(API_URL + query);
             const { result } = await res.json();
             const grid = document.getElementById('routesGrid');
+            const routesFooter = document.getElementById('routesFooter');
+            const routesSection = document.getElementById('routes');
+            const toggleRoutesBtn = document.getElementById('toggleRoutesBtn');
+            const toggleBtnText = document.getElementById('toggleBtnText');
 
             if (grid && result && result.length > 0) {
-                grid.innerHTML = result.map(route => `
-                    <div class="route-card">
-                        <div class="route-info">
-                            <h3>${route.destination}</h3>
-                            <span class="route-from">From ${route.departure}</span>
-                            <div class="route-details-row">
-                                <div class="route-price">€${route.price}</div>
-                                <div class="route-time">⏱ ~ ${route.duration}</div>
+                // 1. Render route cards with appropriate structure and extra-route class
+                grid.innerHTML = result.map((route, index) => `
+                    <div class="route-card ${index >= 3 ? 'extra-route' : ''}">
+                        <div class="route-top">
+                            <div class="route-info">
+                                <h3>${route.destination}</h3>
+                                <span class="route-from">From ${route.departure}</span>
+                                <div class="route-details-row">
+                                    <div class="route-price">€ ${route.price} <span>(one way)</span></div>
+                                    <div class="route-time"><span class="clock-icon">⏱</span> ~ ${route.duration}</div>
+                                </div>
                             </div>
+                            <a href="#booking" class="route-arrow-btn mobile-arrow" aria-label="Book Route">
+                                <img src="assets/arrow-yellow.svg" alt="Arrow" class="rotated-arrow">
+                            </a>
+                        </div>
+                        <div class="route-bottom">
+                            <a href="#booking" class="book-route-link">Book route</a>
+                            <a href="#booking" class="route-arrow-btn desktop-arrow" aria-label="Book Route">
+                                <img src="assets/arrow-yellow.svg" alt="Arrow" class="rotated-arrow">
+                            </a>
                         </div>
                     </div>
                 `).join('');
+
+                // 2. Handle "View all routes" button visibility and toggle logic
+                if (routesFooter) {
+                    if (result.length <= 3) {
+                        routesFooter.style.display = 'none';
+                    } else {
+                        routesFooter.style.display = 'flex';
+                        
+                        if (toggleRoutesBtn) {
+                            // Avoid duplicate event listeners by replacing node or using clean handler
+                            toggleRoutesBtn.onclick = () => {
+                                const isExpanded = routesSection.classList.toggle('expanded');
+                                if (toggleBtnText) {
+                                    toggleBtnText.textContent = isExpanded ? 'Show less routes' : 'View all routes';
+                                }
+                                if (!isExpanded) {
+                                    routesSection.scrollIntoView({ behavior: 'smooth' });
+                                }
+                            };
+                        }
+                    }
+                }
             }
         } catch (err) {
             console.error("Error fetching routes:", err);
