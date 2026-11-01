@@ -353,15 +353,17 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error(`Translation dictionary for "${defaultLang}" was not found! Check your translations object keys.`);
     }
 
-    // Language switcher click handler
     langButtons.forEach(button => {
         button.addEventListener('click', () => {
             langButtons.forEach(btn => btn.classList.remove('active'));
             button.classList.add('active');
 
-            const selectedLang = button.getAttribute('data-lang');
-            const langData = window.translations ? window.translations[selectedLang] : null;
+            const selectedLang = button.getAttribute('data-lang') || 'sr';
+            window.currentLang = selectedLang;
+            localStorage.setItem('site_lang', selectedLang);
 
+            // 1. Refresh static data-key elements
+            const langData = window.translations ? window.translations[selectedLang] : null;
             if (langData) {
                 document.querySelectorAll('[data-key]').forEach(el => {
                     const key = el.getAttribute('data-key');
@@ -369,6 +371,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         el.innerHTML = langData[key];
                     }
                 });
+            }
+
+            // 2. Trigger re-rendering of fleet and route dynamic cards
+            if (typeof window.refreshDynamicContent === 'function') {
+                window.refreshDynamicContent();
             }
         });
     });

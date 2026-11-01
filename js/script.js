@@ -1,48 +1,92 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // ==========================================
+    // 0. ENSURE PAGE STARTS AT THE TOP ON RELOAD
+    // ==========================================
+    if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+    }
+    window.scrollTo(0, 0);
+
+    // ==========================================
+    // SANITY API CONFIGURATION
+    // ==========================================
     const SANITY_PROJECT_ID = 'b3mwp543';
     const DATASET = 'production';
     const API_URL = `https://${SANITY_PROJECT_ID}.api.sanity.io/v2021-10-21/data/query/${DATASET}?query=`;
 
+    // Global in-memory buffers to store raw fetched Sanity data
+    let globalFleetData = [];
+    let globalRoutesData = [];
+
+    // Helper: Safely get current active language (defaults to 'sr')
+    const getActiveLang = () => {
+        return window.currentLang || localStorage.getItem('site_lang') || 'sr';
+    };
+
     // Helper: Safely trigger translation update from lang.js if available
-        const refreshTranslations = () => {
-            if (typeof applyCurrentLanguage === 'function') {
-                applyCurrentLanguage();
-            }
-        };
+    const refreshTranslations = () => {
+        if (typeof applyCurrentLanguage === 'function') {
+            applyCurrentLanguage();
+        }
+    };
+
     // ==========================================
-    // 1. FETCH & RENDER FLEET VEHICLES
+    // 1. RENDER & FETCH FLEET VEHICLES
     // ==========================================
+    const renderFleet = () => {
+        const grid = document.getElementById('fleetGrid');
+        if (!grid || !globalFleetData.length) return;
+
+        const lang = getActiveLang();
+
+        grid.innerHTML = globalFleetData.map(car => {
+            // Pick language-specific field or fallback to Serbian/default
+            const name = car[`name_${lang}`] || car.name_sr || car.name_en || car.name || '';
+            const desc = car[`description_${lang}`] || car.description_sr || car.description || 'Wi-Fi • Klima';
+            const pax = car[`passengerCapacity_${lang}`] || car.passengerCapacity_sr || car.passengerCapacity || '';
+            const luggage = car[`luggageCapacity_${lang}`] || car.luggageCapacity_sr || car.luggageCapacity || '';
+
+            return `
+                <div class="fleet-card">
+                    <div class="fleet-content">
+                        <h3>${name}</h3>
+                        <div class="vehicle-specs">
+                            <div class="spec-item">
+                                <img src="assets/user.svg" alt="Passengers" class="spec-icon">
+                                <span>${pax}</span>
+                            </div>
+                            <div class="spec-item">
+                                <img src="assets/bag.svg" alt="Luggage" class="spec-icon">
+                                <span>${luggage}</span>
+                            </div>
+                        </div>
+                        <div class="vehicle-features">${desc}</div>
+                    </div>
+                    <div class="fleet-img-wrapper">
+                        ${car.imageUrl ? `<img src="${car.imageUrl}" alt="${name}">` : ''}
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        refreshTranslations();
+    };
+
     const fetchFleet = async () => {
-        const query = encodeURIComponent(`*[_type == "fleet"]{name, passengerCapacity, luggageCapacity, description, "imageUrl": image.asset->url}`);
+        const query = encodeURIComponent(`*[_type == "fleet"]{
+            name, name_sr, name_en, name_ru, name_fr,
+            passengerCapacity, passengerCapacity_sr, passengerCapacity_en, passengerCapacity_ru, passengerCapacity_fr,
+            luggageCapacity, luggageCapacity_sr, luggageCapacity_en, luggageCapacity_ru, luggageCapacity_fr,
+            description, description_sr, description_en, description_ru, description_fr,
+            "imageUrl": image.asset->url
+        }`);
         try {
             const res = await fetch(API_URL + query);
             const { result } = await res.json();
-            const grid = document.getElementById('fleetGrid');
 
-            if (grid && result && result.length > 0) {
-                grid.innerHTML = result.map(car => `
-                    <div class="fleet-card">
-                        <div class="fleet-content">
-                            <h3>${car.name}</h3>
-                            <div class="vehicle-specs">
-                                <div class="spec-item">
-                                    <img src="assets/user.svg" alt="Passengers" class="spec-icon">
-                                    <span>${car.passengerCapacity || ''}</span>
-                                </div>
-                                <div class="spec-item">
-                                    <img src="assets/bag.svg" alt="Luggage" class="spec-icon">
-                                    <span>${car.luggageCapacity || ''}</span>
-                                </div>
-                            </div>
-                            <div class="vehicle-features" data-key="fleet_wifi_ac">${car.description || 'Wi-Fi • A/C'}</div>
-                        </div>
-                        <div class="fleet-img-wrapper">
-                            ${car.imageUrl ? `<img src="${car.imageUrl}" alt="${car.name}">` : ''}
-                        </div>
-                    </div>
-                `).join('');
-
-                refreshTranslations();
+            if (result && result.length > 0) {
+                globalFleetData = result;
+                renderFleet();
             }
         } catch (err) {
             console.error("Error fetching fleet from Sanity:", err);
@@ -50,84 +94,107 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // ==========================================
-    // 2. FETCH & RENDER POPULAR ROUTES
+    // 2. RENDER & FETCH POPULAR ROUTES
     // ==========================================
+    const renderRoutes = () => {
+        const grid = document.getElementById('routesGrid');
+        const routesSection = document.getElementById('routes');
+        const routesFooter = document.getElementById('routesFooter');
+        const toggleRoutesBtn = document.getElementById('toggleRoutesBtn');
+        const toggleBtnText = document.getElementById('toggleBtnText');
+
+        if (!grid || !globalRoutesData.length) return;
+
+        const lang = getActiveLang();
+
+        grid.innerHTML = globalRoutesData.map((route, index) => {
+            // Select language-specific field or fallback to Serbian
+            const destination = route[`destination_${lang}`] || route.destination_sr || route.destination || '';
+            const departure = route[`departure_${lang}`] || route.departure_sr || route.departure || '';
+
+            return `
+                <div class="route-card ${index >= 3 ? 'extra-route' : ''}">
+                    <div class="route-top">
+                        <div class="route-info">
+                            <h3>${destination}</h3>
+                            <span class="route-from">
+                                <span data-key="route_from_prefix">Iz</span> ${departure}
+                            </span>
+                            <div class="route-details-row">
+                                <div class="route-price">
+                                    € ${route.price} <span data-key="route_oneway">(u jednom pravcu)</span>
+                                </div>
+                                <div class="route-time"><span class="clock-icon">⏱</span> ~ ${route.duration}</div>
+                            </div>
+                        </div>
+                        <a href="#booking" class="route-arrow-btn mobile-arrow" aria-label="Book Route">
+                            <img src="assets/arrow-yellow.svg" alt="Arrow" class="rotated-arrow">
+                        </a>
+                    </div>
+                    <div class="route-bottom">
+                        <a href="#booking" class="book-route-link" data-key="route_book">Rezerviši rutu</a>
+                        <a href="#booking" class="route-arrow-btn desktop-arrow" aria-label="Book Route">
+                            <img src="assets/arrow-yellow.svg" alt="Arrow" class="rotated-arrow">
+                        </a>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        // Manage "View all routes" button visibility (> 3 cards)
+        if (routesFooter) {
+            if (globalRoutesData.length <= 3) {
+                routesFooter.style.display = 'none';
+            } else {
+                routesFooter.style.display = 'flex';
+
+                if (toggleRoutesBtn) {
+                    toggleRoutesBtn.onclick = () => {
+                        const isExpanded = routesSection.classList.toggle('expanded');
+                        if (toggleBtnText) {
+                            toggleBtnText.setAttribute('data-key', isExpanded ? 'show_less_routes' : 'view_all_routes');
+                            toggleBtnText.textContent = isExpanded ? 'Show less routes' : 'View all routes';
+                        }
+                        refreshTranslations();
+                        if (!isExpanded && routesSection) {
+                            routesSection.scrollIntoView({ behavior: 'smooth' });
+                        }
+                    };
+                }
+            }
+        }
+
+        refreshTranslations();
+    };
+
     const fetchRoutes = async () => {
-        const query = encodeURIComponent(`*[_type == "route"]{destination, departure, price, duration}`);
+        const query = encodeURIComponent(`*[_type == "route"]{
+            destination, destination_sr, destination_en, destination_ru, destination_fr,
+            departure, departure_sr, departure_en, departure_ru, departure_fr,
+            price, duration
+        }`);
         try {
             const res = await fetch(API_URL + query);
             const { result } = await res.json();
-            const grid = document.getElementById('routesGrid');
-            const routesSection = document.getElementById('routes');
-            const routesFooter = document.getElementById('routesFooter');
-            const toggleRoutesBtn = document.getElementById('toggleRoutesBtn');
-            const toggleBtnText = document.getElementById('toggleBtnText');
 
-            if (grid && result && result.length > 0) {
-                // Render cards with extra-route tagging for items past index 2
-                grid.innerHTML = result.map((route, index) => `
-                    <div class="route-card ${index >= 3 ? 'extra-route' : ''}">
-                        <div class="route-top">
-                            <div class="route-info">
-                                <h3>${route.destination}</h3>
-                                <span class="route-from">
-                                    <span data-key="route_from_prefix"></span> ${route.departure || ''}
-                                </span>
-                                <div class="route-details-row">
-                                    <div class="route-price">
-                                        € ${route.price} <span data-key="route_oneway">(u jednom pravcu)</span>
-                                    </div>
-                                    <div class="route-time"><span class="clock-icon">⏱</span> ~ ${route.duration}</div>
-                                </div>
-                            </div>
-                            <a href="#booking" class="route-arrow-btn mobile-arrow" aria-label="Book Route">
-                                <img src="assets/arrow-yellow.svg" alt="Arrow" class="rotated-arrow">
-                            </a>
-                        </div>
-                        <div class="route-bottom">
-                            <a href="#booking" class="book-route-link" data-key="route_book">Rezerviši rutu</a>
-                            <a href="#booking" class="route-arrow-btn desktop-arrow" aria-label="Book Route">
-                                <img src="assets/arrow-yellow.svg" alt="Arrow" class="rotated-arrow">
-                            </a>
-                        </div>
-                    </div>
-                `).join('');
-
-                // Manage "View all routes" button visibility (> 3 cards)
-                if (routesFooter) {
-                    if (result.length <= 3) {
-                        routesFooter.style.display = 'none';
-                    } else {
-                        routesFooter.style.display = 'flex';
-
-                        if (toggleRoutesBtn) {
-                            toggleRoutesBtn.onclick = () => {
-                                const isExpanded = routesSection.classList.toggle('expanded');
-                                if (toggleBtnText) {
-                                    toggleBtnText.setAttribute('data-key', isExpanded ? 'show_less_routes' : 'view_all_routes');
-                                    toggleBtnText.textContent = isExpanded ? 'Show less routes' : 'View all routes';
-                                }
-                                refreshTranslations();
-                                if (!isExpanded) {
-                                    routesSection.scrollIntoView({ behavior: 'smooth' });
-                                }
-                            };
-                        }
-                    }
-                }
-
-                refreshTranslations();
+            if (result && result.length > 0) {
+                globalRoutesData = result;
+                renderRoutes();
             }
         } catch (err) {
             console.error("Error fetching routes from Sanity:", err);
         }
     };
 
+    // Expose global re-render function for lang.js to call when language buttons are clicked
+    window.refreshDynamicContent = () => {
+        renderFleet();
+        renderRoutes();
+    };
+
+    // Execute initial fetch calls
     fetchFleet();
     fetchRoutes();
-    if ('scrollRestoration' in history) {
-        history.scrollRestoration = 'manual';
-    }
     window.scrollTo(0, 0);
 
     // ==========================================
