@@ -6,7 +6,6 @@ document.addEventListener('DOMContentLoaded', () => {
         history.scrollRestoration = 'manual';
     }
     window.scrollTo(0, 0);
-
     // ==========================================
     // SANITY API CONFIGURATION
     // ==========================================
@@ -195,7 +194,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Execute initial fetch calls
     fetchFleet();
     fetchRoutes();
-    window.scrollTo(0, 0);
 
     // ==========================================
     // 1. MOBILE MENU TOGGLE LOGIC
