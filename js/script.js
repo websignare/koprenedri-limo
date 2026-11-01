@@ -71,11 +71,11 @@ document.addEventListener('DOMContentLoaded', () => {
                             <div class="route-info">
                                 <h3>${route.destination}</h3>
                                 <span class="route-from">
-                                    <span data-key="route_from_prefix">From</span> ${route.departure}
+                                    <span data-key="route_from_prefix">Iz Petrovca</span> ${route.departure || ''}
                                 </span>
                                 <div class="route-details-row">
                                     <div class="route-price">
-                                        € ${route.price} <span data-key="route_oneway">(one way)</span>
+                                        € ${route.price} <span data-key="route_oneway">(u jednom pravcu)</span>
                                     </div>
                                     <div class="route-time"><span class="clock-icon">⏱</span> ~ ${route.duration}</div>
                                 </div>
@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             </a>
                         </div>
                         <div class="route-bottom">
-                            <a href="#booking" class="book-route-link" data-key="route_book">Book route</a>
+                            <a href="#booking" class="book-route-link" data-key="route_book">Rezerviši rutu</a>
                             <a href="#booking" class="route-arrow-btn desktop-arrow" aria-label="Book Route">
                                 <img src="assets/arrow-yellow.svg" alt="Arrow" class="rotated-arrow">
                             </a>
