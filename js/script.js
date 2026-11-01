@@ -3,7 +3,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const DATASET = 'production';
     const API_URL = `https://${SANITY_PROJECT_ID}.api.sanity.io/v2021-10-21/data/query/${DATASET}?query=`;
 
-    // Fetch and render Fleet Vehicles
+    // Helper: Safely trigger translation update from lang.js if available
+        const refreshTranslations = () => {
+            if (typeof applyCurrentLanguage === 'function') {
+                applyCurrentLanguage();
+            }
+        };
+    // ==========================================
+    // 1. FETCH & RENDER FLEET VEHICLES
+    // ==========================================
     const fetchFleet = async () => {
         const query = encodeURIComponent(`*[_type == "fleet"]{name, passengerCapacity, luggageCapacity, description, "imageUrl": image.asset->url}`);
         try {
@@ -26,41 +34,49 @@ document.addEventListener('DOMContentLoaded', () => {
                                     <span>${car.luggageCapacity || ''}</span>
                                 </div>
                             </div>
-                            <div class="vehicle-features">${car.description || ''}</div>
+                            <div class="vehicle-features" data-key="fleet_wifi_ac">${car.description || 'Wi-Fi • A/C'}</div>
                         </div>
                         <div class="fleet-img-wrapper">
                             ${car.imageUrl ? `<img src="${car.imageUrl}" alt="${car.name}">` : ''}
                         </div>
                     </div>
                 `).join('');
+
+                refreshTranslations();
             }
         } catch (err) {
-            console.error("Error fetching fleet:", err);
+            console.error("Error fetching fleet from Sanity:", err);
         }
     };
 
-    // Fetch and render Popular Routes
+    // ==========================================
+    // 2. FETCH & RENDER POPULAR ROUTES
+    // ==========================================
     const fetchRoutes = async () => {
         const query = encodeURIComponent(`*[_type == "route"]{destination, departure, price, duration}`);
         try {
             const res = await fetch(API_URL + query);
             const { result } = await res.json();
             const grid = document.getElementById('routesGrid');
-            const routesFooter = document.getElementById('routesFooter');
             const routesSection = document.getElementById('routes');
+            const routesFooter = document.getElementById('routesFooter');
             const toggleRoutesBtn = document.getElementById('toggleRoutesBtn');
             const toggleBtnText = document.getElementById('toggleBtnText');
 
             if (grid && result && result.length > 0) {
-                // 1. Render route cards with appropriate structure and extra-route class
+                // Render cards with extra-route tagging for items past index 2
                 grid.innerHTML = result.map((route, index) => `
                     <div class="route-card ${index >= 3 ? 'extra-route' : ''}">
                         <div class="route-top">
                             <div class="route-info">
                                 <h3>${route.destination}</h3>
-                                <span class="route-from">From ${route.departure}</span>
+                                <span class="route-from">
+                                    <span data-key="route_from_prefix">From</span> ${route.departure}
+                                </span>
                                 <div class="route-details-row">
-                                    <div class="route-price">€ ${route.price} <span>(one way)</span></div>
+                                    <div class="route-price">
+                                        € ${route.price} <span data-key="route_oneway">(one way)</span>
+                                    </div>
                                     <div class="route-time"><span class="clock-icon">⏱</span> ~ ${route.duration}</div>
                                 </div>
                             </div>
@@ -69,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             </a>
                         </div>
                         <div class="route-bottom">
-                            <a href="#booking" class="book-route-link">Book route</a>
+                            <a href="#booking" class="book-route-link" data-key="route_book">Book route</a>
                             <a href="#booking" class="route-arrow-btn desktop-arrow" aria-label="Book Route">
                                 <img src="assets/arrow-yellow.svg" alt="Arrow" class="rotated-arrow">
                             </a>
@@ -77,20 +93,21 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 `).join('');
 
-                // 2. Handle "View all routes" button visibility and toggle logic
+                // Manage "View all routes" button visibility (> 3 cards)
                 if (routesFooter) {
                     if (result.length <= 3) {
                         routesFooter.style.display = 'none';
                     } else {
                         routesFooter.style.display = 'flex';
-                        
+
                         if (toggleRoutesBtn) {
-                            // Avoid duplicate event listeners by replacing node or using clean handler
                             toggleRoutesBtn.onclick = () => {
                                 const isExpanded = routesSection.classList.toggle('expanded');
                                 if (toggleBtnText) {
+                                    toggleBtnText.setAttribute('data-key', isExpanded ? 'show_less_routes' : 'view_all_routes');
                                     toggleBtnText.textContent = isExpanded ? 'Show less routes' : 'View all routes';
                                 }
+                                refreshTranslations();
                                 if (!isExpanded) {
                                     routesSection.scrollIntoView({ behavior: 'smooth' });
                                 }
@@ -98,13 +115,14 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                     }
                 }
+
+                refreshTranslations();
             }
         } catch (err) {
-            console.error("Error fetching routes:", err);
+            console.error("Error fetching routes from Sanity:", err);
         }
     };
 
-    // Initialize Sanity fetching
     fetchFleet();
     fetchRoutes();
     if ('scrollRestoration' in history) {
