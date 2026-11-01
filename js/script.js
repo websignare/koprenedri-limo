@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <div class="route-info">
                                 <h3>${route.destination}</h3>
                                 <span class="route-from">
-                                    <span data-key="route_from_prefix">Iz Petrovca</span> ${route.departure || ''}
+                                    <span data-key="route_from_prefix"></span> ${route.departure || ''}
                                 </span>
                                 <div class="route-details-row">
                                     <div class="route-price">
