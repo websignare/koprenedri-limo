@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Global in-memory buffers to store raw fetched Sanity data
     let globalFleetData = [];
     let globalRoutesData = [];
+    let globalFaqData = []; // Add global buffer for FAQ data
 
     // Helper: Safely get current active language (defaults to 'sr')
     const getActiveLang = () => {
@@ -228,11 +229,13 @@ document.addEventListener('DOMContentLoaded', () => {
     window.refreshDynamicContent = () => {
         renderFleet();
         renderRoutes();
+        renderFaqs(); // Added renderFaqs
     };
 
     // Execute initial fetch calls
     fetchFleet();
     fetchRoutes();
+    fetchFaqs(); // Added fetchFaqs
 
 
     // ==========================================
@@ -278,50 +281,99 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==========================================
     // 4. FAQ ACCORDION & SCROLL-AWAY RESET LOGIC
     // ==========================================
-    const faqItems = document.querySelectorAll('.faq-item');
-    const faqSection = document.getElementById('faq');
+    const rebindFaqAccordion = () => {
+        const faqItems = document.querySelectorAll('.faq-item');
+        const faqSection = document.getElementById('faq');
 
-    const closeAllFaqs = () => {
+        const closeAllFaqs = () => {
+            faqItems.forEach(item => {
+                item.classList.remove('active');
+                const icon = item.querySelector('.faq-icon');
+                const btn = item.querySelector('.faq-question');
+                if (icon) icon.textContent = '+';
+                if (btn) btn.setAttribute('aria-expanded', 'false');
+            });
+        };
+
         faqItems.forEach(item => {
-            item.classList.remove('active');
+            const questionBtn = item.querySelector('.faq-question');
             const icon = item.querySelector('.faq-icon');
-            const btn = item.querySelector('.faq-question');
-            if (icon) icon.textContent = '+';
-            if (btn) btn.setAttribute('aria-expanded', 'false');
-        });
-    };
 
-    faqItems.forEach(item => {
-        const questionBtn = item.querySelector('.faq-question');
-        const icon = item.querySelector('.faq-icon');
+            questionBtn.addEventListener('click', () => {
+                const isActive = item.classList.contains('active');
+                closeAllFaqs();
 
-        questionBtn.addEventListener('click', () => {
-            const isActive = item.classList.contains('active');
-            closeAllFaqs();
+                if (!isActive) {
+                    item.classList.add('active');
+                    icon.textContent = '-';
+                    questionBtn.setAttribute('aria-expanded', 'true');
 
-            if (!isActive) {
-                item.classList.add('active');
-                icon.textContent = '-';
-                questionBtn.setAttribute('aria-expanded', 'true');
-
-                requestAnimationFrame(() => {
-                    faqSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                });
-            }
-        });
-    });
-
-    if (faqSection) {
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (!entry.isIntersecting) {
-                    closeAllFaqs();
+                    requestAnimationFrame(() => {
+                        faqSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    });
                 }
             });
-        }, { threshold: 0.1 });
+        });
 
-        observer.observe(faqSection);
-    }
+        if (faqSection && !window.faqObserverBound) {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (!entry.isIntersecting) {
+                        closeAllFaqs();
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            observer.observe(faqSection);
+            window.faqObserverBound = true;
+        }
+    };
+
+    const renderFaqs = () => {
+        const container = document.getElementById('faqList');
+        if (!container || !globalFaqData.length) return;
+
+        const lang = getActiveLang();
+
+        container.innerHTML = globalFaqData.map(item => {
+            const question = item[`question_${lang}`] || item.question_sr || item.question_en || '';
+            const answer = item[`answer_${lang}`] || item.answer_sr || item.answer_en || '';
+
+            return `
+                <div class="faq-item">
+                    <button class="faq-question" aria-expanded="false">
+                        <span>${question}</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>${answer}</p>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        refreshTranslations(container);
+        observeDynamicCards(container);
+        rebindFaqAccordion();
+    };
+
+    const fetchFaqs = async () => {
+        const query = encodeURIComponent(`*[_type == "faq"]{
+            question_sr, question_en, question_ru, question_fr,
+            answer_sr, answer_en, answer_ru, answer_fr
+        }`);
+        try {
+            const res = await fetch(API_URL + query);
+            const { result } = await res.json();
+
+            if (result && result.length > 0) {
+                globalFaqData = result;
+                renderFaqs();
+            }
+        } catch (err) {
+            console.error("Error fetching FAQs from Sanity:", err);
+        }
+    };
 
     // ==========================================
     // 5. COPY PHONE NUMBER WITH FLOATING TOOLTIP
