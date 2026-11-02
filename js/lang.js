@@ -321,7 +321,6 @@ window.translations = {
     }
 };
 
-document.addEventListener('DOMContentLoaded', () => {
     const langButtons = document.querySelectorAll('.lang-btn');
     const defaultLang = 'sr';
 
@@ -394,4 +393,3 @@ document.addEventListener('DOMContentLoaded', () => {
             document.body.style.overflow = '';
         });
     });
-});
