@@ -328,7 +328,7 @@ window.translations = {
  */
 window.applyTranslations = function(container) {
     const root = container || document;
-    const lang = window.currentLang || localStorage.getItem('site_lang') || 'sr';
+    const lang = window.currentLang || 'sr';
     const langData = window.translations ? window.translations[lang] : null;
 
     if (!langData) return;
@@ -348,7 +348,6 @@ window.applyTranslations = function(container) {
  */
 window.setLanguage = function(selectedLang) {
     window.currentLang = selectedLang;
-    localStorage.setItem('site_lang', selectedLang);
 
     // 1. Highlight the matching language button(s)
     const langButtons = document.querySelectorAll('.lang-btn');
@@ -374,7 +373,6 @@ window.setLanguage = function(selectedLang) {
 
 document.addEventListener('DOMContentLoaded', () => {
     const langButtons = document.querySelectorAll('.lang-btn');
-    const initialLang = localStorage.getItem('site_lang') || 'sr';
 
     langButtons.forEach(button => {
         button.addEventListener('click', (e) => {
@@ -385,5 +383,5 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Initialize initial language and translate elements
-    window.setLanguage(initialLang);
+    window.setLanguage('sr');
 });

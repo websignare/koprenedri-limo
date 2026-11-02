@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Helper: Safely get current active language (defaults to 'sr')
     const getActiveLang = () => {
-        return window.currentLang || localStorage.getItem('site_lang') || 'sr';
+        return window.currentLang || 'sr';
     };
 
     // Helper: Safely trigger translation update from lang.js if available
