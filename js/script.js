@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
         history.scrollRestoration = 'manual';
     }
     window.scrollTo(0, 0);
+
     // ==========================================
     // SANITY API CONFIGURATION
     // ==========================================
@@ -23,10 +24,34 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // Helper: Safely trigger translation update from lang.js if available
-    const refreshTranslations = () => {
-        if (typeof applyCurrentLanguage === 'function') {
-            applyCurrentLanguage();
+    const refreshTranslations = (container) => {
+        if (typeof window.applyTranslations === 'function') {
+            window.applyTranslations(container);
         }
+    };
+
+    // Scroll reveal observer setup
+    const observerOptions = {
+        root: null,
+        rootMargin: '0px 0px -10% 0px',
+        threshold: 0.15
+    };
+
+    const scrollObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('revealed');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+
+    const observeDynamicCards = (container) => {
+        if (!container) return;
+        container.querySelectorAll('.route-card, .fleet-card').forEach(el => {
+            el.classList.add('reveal-on-scroll');
+            scrollObserver.observe(el);
+        });
     };
 
     // ==========================================
@@ -39,11 +64,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const lang = getActiveLang();
 
         grid.innerHTML = globalFleetData.map(car => {
-            // Pick language-specific field or fallback to Serbian/default
-            const name = car[`name_${lang}`] || car.name_sr || car.name_en || car.name || '';
-            const desc = car[`description_${lang}`] || car.description_sr || car.description || 'Wi-Fi • Klima';
-            const pax = car[`passengerCapacity_${lang}`] || car.passengerCapacity_sr || car.passengerCapacity || '';
-            const luggage = car[`luggageCapacity_${lang}`] || car.luggageCapacity_sr || car.luggageCapacity || '';
+            // Pick language-specific field or fallback to English/Serbian/default
+            const name = car[`name_${lang}`] || car.name_en || car.name_sr || car.name || '';
+            const desc = car[`description_${lang}`] || car.description_en || car.description_sr || car.description || 'Wi-Fi • Klima';
+            const pax = car[`passengerCapacity_${lang}`] || car.passengerCapacity_en || car.passengerCapacity_sr || car.passengerCapacity || '';
+            const luggage = car[`luggageCapacity_${lang}`] || car.luggageCapacity_en || car.luggageCapacity_sr || car.luggageCapacity || '';
 
             return `
                 <div class="fleet-card">
@@ -68,7 +93,8 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
         }).join('');
 
-        refreshTranslations();
+        refreshTranslations(grid);
+        observeDynamicCards(grid);
     };
 
     const fetchFleet = async () => {
@@ -99,17 +125,21 @@ document.addEventListener('DOMContentLoaded', () => {
         const grid = document.getElementById('routesGrid');
         const routesSection = document.getElementById('routes');
         const routesFooter = document.getElementById('routesFooter');
-        const toggleRoutesBtn = document.getElementById('toggleRoutesBtn');
         const toggleBtnText = document.getElementById('toggleBtnText');
 
         if (!grid || !globalRoutesData.length) return;
 
         const lang = getActiveLang();
+        const langData = (window.translations && window.translations[lang]) ? window.translations[lang] : {};
+
+        const fromPrefix = langData.route_from_prefix || 'Iz';
+        const oneWayText = langData.route_oneway || '(u jednom pravcu)';
+        const bookRouteText = langData.route_book || 'Rezerviši rutu';
 
         grid.innerHTML = globalRoutesData.map((route, index) => {
-            // Select language-specific field or fallback to Serbian
-            const destination = route[`destination_${lang}`] || route.destination_sr || route.destination || '';
-            const departure = route[`departure_${lang}`] || route.departure_sr || route.departure || '';
+            // Select language-specific field or fallback to English/Serbian
+            const destination = route[`destination_${lang}`] || route.destination_en || route.destination_sr || route.destination || '';
+            const departure = route[`departure_${lang}`] || route.departure_en || route.departure_sr || route.departure || '';
 
             return `
                 <div class="route-card ${index >= 3 ? 'extra-route' : ''}">
@@ -117,11 +147,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="route-info">
                             <h3>${destination}</h3>
                             <span class="route-from">
-                                <span data-key="route_from_prefix">Iz</span> ${departure}
+                                <span data-key="route_from_prefix">${fromPrefix}</span> ${departure}
                             </span>
                             <div class="route-details-row">
                                 <div class="route-price">
-                                    € ${route.price} <span data-key="route_oneway">(u jednom pravcu)</span>
+                                    € ${route.price} <span data-key="route_oneway">${oneWayText}</span>
                                 </div>
                                 <div class="route-time"><span class="clock-icon">⏱</span> ~ ${route.duration}</div>
                             </div>
@@ -131,7 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         </a>
                     </div>
                     <div class="route-bottom">
-                        <a href="#booking" class="book-route-link" data-key="route_book">Rezerviši rutu</a>
+                        <a href="#booking" class="book-route-link" data-key="route_book">${bookRouteText}</a>
                         <a href="#booking" class="route-arrow-btn desktop-arrow" aria-label="Book Route">
                             <img src="assets/arrow-yellow.svg" alt="Arrow" class="rotated-arrow">
                         </a>
@@ -146,24 +176,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 routesFooter.style.display = 'none';
             } else {
                 routesFooter.style.display = 'flex';
-
-                if (toggleRoutesBtn) {
-                    toggleRoutesBtn.onclick = () => {
-                        const isExpanded = routesSection.classList.toggle('expanded');
-                        if (toggleBtnText) {
-                            toggleBtnText.setAttribute('data-key', isExpanded ? 'show_less_routes' : 'view_all_routes');
-                            toggleBtnText.textContent = isExpanded ? 'Show less routes' : 'View all routes';
-                        }
-                        refreshTranslations();
-                        if (!isExpanded && routesSection) {
-                            routesSection.scrollIntoView({ behavior: 'smooth' });
-                        }
-                    };
+                const isExpanded = routesSection ? routesSection.classList.contains('expanded') : false;
+                if (toggleBtnText) {
+                    const key = isExpanded ? 'show_less_routes' : 'view_all_routes';
+                    toggleBtnText.setAttribute('data-key', key);
+                    toggleBtnText.textContent = langData[key] || (isExpanded ? 'Show less routes' : 'View all routes');
                 }
             }
         }
 
-        refreshTranslations();
+        refreshTranslations(grid);
+        observeDynamicCards(grid);
     };
 
     const fetchRoutes = async () => {
@@ -235,60 +258,42 @@ document.addEventListener('DOMContentLoaded', () => {
     // 2. POPULAR ROUTES EXPANSION LOGIC (Multi-lang safe)
     // ==========================================
     const routesSection = document.getElementById('routes');
-    const routesGrid = document.getElementById('routesGrid');
     const routesFooter = document.getElementById('routesFooter');
     const toggleRoutesBtn = document.getElementById('toggleRoutesBtn');
     const toggleBtnText = document.getElementById('toggleBtnText');
 
-    if (routesGrid && routesFooter && toggleRoutesBtn) {
-        const allCards = routesGrid.querySelectorAll('.route-card');
+    if (routesFooter && toggleRoutesBtn) {
+        toggleRoutesBtn.addEventListener('click', () => {
+            const isExpanded = routesSection ? routesSection.classList.toggle('expanded') : false;
+            const lang = getActiveLang();
+            const langData = window.translations ? window.translations[lang] : null;
+            const key = isExpanded ? 'show_less_routes' : 'view_all_routes';
 
-        // Rule: If there are 3 or fewer route cards, hide the button completely
-        if (allCards.length <= 3) {
-            routesFooter.style.display = 'none';
-        } else {
-            let isExpanded = false;
-
-            toggleRoutesBtn.addEventListener('click', () => {
-                isExpanded = !isExpanded;
-                routesSection.classList.toggle('expanded', isExpanded);
-
-                // Determine active language from your active lang button or default to 'sr'
-                const activeLangBtn = document.querySelector('.lang-btn.active');
-                const currentLang = activeLangBtn ? activeLangBtn.getAttribute('data-lang') : 'sr';
-                const langData = window.translations ? window.translations[currentLang] : null;
-
-                if (isExpanded) {
-                    toggleBtnText.setAttribute('data-key', 'show_less_routes');
-                    if (langData && langData['show_less_routes']) {
-                        toggleBtnText.textContent = langData['show_less_routes'];
-                    } else {
-                        toggleBtnText.textContent = currentLang === 'fr' ? 'Voir moins de routes' : currentLang === 'ru' ? 'Скрыть маршруты' : 'Prikaži manje ruta';
-                    }
-                    
-                    // Smooth scroll footer into view with extra offset
-                    setTimeout(() => {
-                        const footerRect = routesFooter.getBoundingClientRect();
-                        const extraSpace = window.innerWidth >= 1024 ? 80 : 40;
-                        const targetPosition = window.pageYOffset + footerRect.top - window.innerHeight + footerRect.height + extraSpace;
-                        
-                        window.scrollTo({
-                            top: targetPosition,
-                            behavior: 'smooth'
-                        });
-                    }, 200);
+            if (toggleBtnText) {
+                toggleBtnText.setAttribute('data-key', key);
+                if (langData && langData[key]) {
+                    toggleBtnText.textContent = langData[key];
                 } else {
-                    toggleBtnText.setAttribute('data-key', 'view_all_routes');
-                    if (langData && langData['view_all_routes']) {
-                        toggleBtnText.textContent = langData['view_all_routes'];
-                    } else {
-                        toggleBtnText.textContent = currentLang === 'fr' ? 'Voir toutes les routes' : currentLang === 'ru' ? 'Посмотреть все маршруты' : 'Prikaži sve rute';
-                    }
-                    
-                    routesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    toggleBtnText.textContent = isExpanded ? 'Show less routes' : 'View all routes';
                 }
-            });
-        }
+            }
+
+            if (isExpanded) {
+                // Smooth scroll footer into view with extra offset
+                setTimeout(() => {
+                    const footerRect = routesFooter.getBoundingClientRect();
+                    const extraSpace = window.innerWidth >= 1024 ? 80 : 40;
+                    const targetPosition = window.pageYOffset + footerRect.top - window.innerHeight + footerRect.height + extraSpace;
+                    
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                }, 200);
+            } else if (routesSection) {
+                routesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
     }
 
     // ==========================================
@@ -406,23 +411,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==========================================
     // 6. LUXURY SCROLL REVEAL OBSERVER
     // ==========================================
-    const observerOptions = {
-        root: null,
-        rootMargin: '0px 0px -10% 0px',
-        threshold: 0.15
-    };
-
-    const scrollObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('revealed');
-                observer.unobserve(entry.target);
-            }
-        });
-    }, observerOptions);
-
     const revealElements = document.querySelectorAll(
-        '.section-header, .route-card, .fleet-card, .step-card, .faq-item, .booking-form-box, .intro-text-content, .footer-cta-banner'
+        '.section-header, .step-card, .faq-item, .booking-form-box, .intro-text-content, .footer-cta-banner'
     );
     
     revealElements.forEach(el => {
@@ -497,5 +487,3 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
-
-
