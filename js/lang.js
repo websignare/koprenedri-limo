@@ -320,11 +320,9 @@ window.translations = {
         footer_credit: "Conçu et développé pour un voyage sans effort et en toute intimité par Nevena."
     }
 };
-
-    /**
-- Applies translations to elements with data-key attributes.
-- 
-@param {HTMLElement|Document} [container=document] Target container to search within.
+/**
+ * Applies translations to elements with data-key attributes.
+ * @param {HTMLElement|Document} [container=document] Target container to search within.
  */
 window.applyTranslations = function(container) {
     const root = container || document;
@@ -342,12 +340,12 @@ window.applyTranslations = function(container) {
 };
 
 /**
-- Changes site language, updates UI indicators, translates DOM, and re-renders dynamic content.
-- 
-@param {string} selectedLang Language code ('sr', 'en', 'ru', 'fr').
+ * Changes site language, updates UI indicators, translates DOM, and re-renders dynamic content.
+ * @param {string} selectedLang Language code ('sr', 'en', 'ru', 'fr').
  */
 window.setLanguage = function(selectedLang) {
     window.currentLang = selectedLang;
+    localStorage.setItem('site_lang', selectedLang);
 
     // 1. Highlight the matching language button(s)
     const langButtons = document.querySelectorAll('.lang-btn');
@@ -382,6 +380,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Initialize initial language and translate elements
+    // Explicitly force Serbian on every fresh page load/reload
     window.setLanguage('sr');
 });
