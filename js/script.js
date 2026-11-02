@@ -64,7 +64,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const lang = getActiveLang();
 
         grid.innerHTML = globalFleetData.map(car => {
-            // Pick language-specific field or fallback to English/Serbian/default
             const name = car[`name_${lang}`] || car.name_en || car.name_sr || car.name || '';
             const desc = car[`description_${lang}`] || car.description_en || car.description_sr || car.description || 'Wi-Fi • Klima';
             const pax = car[`passengerCapacity_${lang}`] || car.passengerCapacity_en || car.passengerCapacity_sr || car.passengerCapacity || '';
@@ -125,6 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const grid = document.getElementById('routesGrid');
         const routesSection = document.getElementById('routes');
         const routesFooter = document.getElementById('routesFooter');
+        const toggleRoutesBtn = document.getElementById('toggleRoutesBtn');
         const toggleBtnText = document.getElementById('toggleBtnText');
 
         if (!grid || !globalRoutesData.length) return;
@@ -136,7 +136,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const bookRouteText = langData.route_book || 'Rezerviši rutu';
 
         grid.innerHTML = globalRoutesData.map((route, index) => {
-            // Select language-specific field or fallback to English/Serbian
             const destination = route[`destination_${lang}`] || route.destination_en || route.destination_sr || route.destination || '';
             const departure = route[`departure_${lang}`] || route.departure_en || route.departure_sr || route.departure || '';
 
@@ -145,9 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="route-top">
                         <div class="route-info">
                             <h3>${destination}</h3>
-                            <span class="route-from">
-                                ${departure}
-                            </span>
+                            <span class="route-from">${departure}</span>
                             <div class="route-details-row">
                                 <div class="route-price">
                                     € ${route.price} <span>${oneWayText}</span>
@@ -169,17 +166,37 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
         }).join('');
 
-        // Manage "View all routes" button visibility (> 3 cards)
+        // Manage "View all routes" button visibility (> 3 cards) & toggle action
         if (routesFooter) {
             if (globalRoutesData.length <= 3) {
                 routesFooter.style.display = 'none';
             } else {
                 routesFooter.style.display = 'flex';
                 const isExpanded = routesSection ? routesSection.classList.contains('expanded') : false;
+                
                 if (toggleBtnText) {
                     const key = isExpanded ? 'show_less_routes' : 'view_all_routes';
                     toggleBtnText.setAttribute('data-key', key);
                     toggleBtnText.textContent = langData[key] || (isExpanded ? 'Show less routes' : 'View all routes');
+                }
+
+                // Wire up click event listener for expanding/collapsing
+                if (toggleRoutesBtn) {
+                    toggleRoutesBtn.onclick = () => {
+                        const nowExpanded = routesSection.classList.toggle('expanded');
+                        const currentLang = getActiveLang();
+                        const currentLangData = (window.translations && window.translations[currentLang]) ? window.translations[currentLang] : {};
+                        
+                        if (toggleBtnText) {
+                            const key = nowExpanded ? 'show_less_routes' : 'view_all_routes';
+                            toggleBtnText.setAttribute('data-key', key);
+                            toggleBtnText.textContent = currentLangData[key] || (nowExpanded ? 'Show less routes' : 'View all routes');
+                        }
+
+                        if (!nowExpanded && routesSection) {
+                            routesSection.scrollIntoView({ behavior: 'smooth' });
+                        }
+                    };
                 }
             }
         }
@@ -216,6 +233,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Execute initial fetch calls
     fetchFleet();
     fetchRoutes();
+
 
     // ==========================================
     // 3. WHATSAPP BOOKING FORM HANDLER & RELOAD RESET
