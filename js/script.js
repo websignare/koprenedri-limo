@@ -132,9 +132,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const lang = getActiveLang();
         const langData = (window.translations && window.translations[lang]) ? window.translations[lang] : {};
 
-        const fromPrefix = langData.route_from_prefix || 'Iz';
-        const oneWayText = langData.route_oneway || '(u jednom pravcu)';
-        const bookRouteText = langData.route_book || 'Rezerviši rutu';
+        const oneWayText = '(u jednom smeru)';
+        const bookRouteText = 'Rezerviši rutu';
 
         grid.innerHTML = globalRoutesData.map((route, index) => {
             // Select language-specific field or fallback to English/Serbian
@@ -147,11 +146,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="route-info">
                             <h3>${destination}</h3>
                             <span class="route-from">
-                                <span data-key="route_from_prefix">${fromPrefix}</span> ${departure}
+                                ${departure}
                             </span>
                             <div class="route-details-row">
                                 <div class="route-price">
-                                    € ${route.price} <span data-key="route_oneway">${oneWayText}</span>
+                                    € ${route.price} <span>${oneWayText}</span>
                                 </div>
                                 <div class="route-time"><span class="clock-icon">⏱</span> ~ ${route.duration}</div>
                             </div>
@@ -161,7 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         </a>
                     </div>
                     <div class="route-bottom">
-                        <a href="#booking" class="book-route-link" data-key="route_book">${bookRouteText}</a>
+                        <a href="#booking" class="book-route-link">${bookRouteText}</a>
                         <a href="#booking" class="route-arrow-btn desktop-arrow" aria-label="Book Route">
                             <img src="assets/arrow-yellow.svg" alt="Arrow" class="rotated-arrow">
                         </a>
