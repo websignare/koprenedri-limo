@@ -405,6 +405,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 behavior: 'smooth'
             });
         });
+    }
 
     // ==========================================
     // 9. MENU TOGGLE FUNCTIONALITY
@@ -432,4 +433,3 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
-
