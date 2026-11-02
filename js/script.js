@@ -132,8 +132,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const lang = getActiveLang();
         const langData = (window.translations && window.translations[lang]) ? window.translations[lang] : {};
 
-        const langData = (window.translations && window.translations[lang]) ? window.translations[lang] : {};
-
         const oneWayText = langData.route_oneway || '(u jednom pravcu)';
         const bookRouteText = langData.route_book || 'Rezerviši rutu';
 
