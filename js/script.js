@@ -216,6 +216,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Execute initial fetch calls
     fetchFleet();
     fetchRoutes();
+
     // ==========================================
     // 3. WHATSAPP BOOKING FORM HANDLER & RELOAD RESET
     // ==========================================
