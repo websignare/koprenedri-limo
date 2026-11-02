@@ -132,8 +132,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const lang = getActiveLang();
         const langData = (window.translations && window.translations[lang]) ? window.translations[lang] : {};
 
-        const oneWayText = '(u jednom smeru)';
-        const bookRouteText = 'Rezerviši rutu';
+        const langData = (window.translations && window.translations[lang]) ? window.translations[lang] : {};
+
+        const oneWayText = langData.route_oneway || '(u jednom pravcu)';
+        const bookRouteText = langData.route_book || 'Rezerviši rutu';
 
         grid.innerHTML = globalRoutesData.map((route, index) => {
             // Select language-specific field or fallback to English/Serbian
