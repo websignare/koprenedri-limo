@@ -321,75 +321,69 @@ window.translations = {
     }
 };
 
+    /**
+- Applies translations to elements with data-key attributes.
+- 
+@param {HTMLElement|Document} [container=document] Target container to search within.
+ */
+window.applyTranslations = function(container) {
+    const root = container || document;
+    const lang = window.currentLang || localStorage.getItem('site_lang') || 'sr';
+    const langData = window.translations ? window.translations[lang] : null;
+
+    if (!langData) return;
+
+    root.querySelectorAll('[data-key]').forEach(el => {
+        const key = el.getAttribute('data-key');
+        if (langData[key]) {
+            el.innerHTML = langData[key];
+        }
+    });
+};
+
+/**
+- Changes site language, updates UI indicators, translates DOM, and re-renders dynamic content.
+- 
+@param {string} selectedLang Language code ('sr', 'en', 'ru', 'fr').
+ */
+window.setLanguage = function(selectedLang) {
+    window.currentLang = selectedLang;
+    localStorage.setItem('site_lang', selectedLang);
+
+    // 1. Highlight the matching language button(s)
     const langButtons = document.querySelectorAll('.lang-btn');
-    const defaultLang = 'sr';
-
-    // 1. Force state to default language ('sr') on page load
-    window.currentLang = defaultLang;
-    localStorage.setItem('site_lang', defaultLang);
-
-    // Helper to translate all static [data-key] elements
-    window.applyTranslations = function(container) {
-        const root = container || document;
-        const lang = window.currentLang || 'sr';
-        const langData = window.translations ? window.translations[lang] : null;
-
-        if (!langData) return;
-
-        root.querySelectorAll('[data-key]').forEach(el => {
-            const key = el.getAttribute('data-key');
-            if (langData[key]) {
-                el.innerHTML = langData[key];
-            }
-        });
-    };
-
-    // Synchronize language buttons on initial load
     langButtons.forEach(btn => {
-        if (btn.getAttribute('data-lang') === defaultLang) {
+        if (btn.getAttribute('data-lang') === selectedLang) {
             btn.classList.add('active');
         } else {
             btn.classList.remove('active');
         }
     });
 
-    document.documentElement.lang = defaultLang;
+    // 2. Update html root lang attribute
+    document.documentElement.lang = selectedLang;
+
+    // 3. Refresh static data-key elements
     window.applyTranslations();
 
-    // Language switcher click handler
+    // 4. Trigger re-rendering of dynamic content (fleet and routes)
+    if (typeof window.refreshDynamicContent === 'function') {
+        window.refreshDynamicContent();
+    }
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+    const langButtons = document.querySelectorAll('.lang-btn');
+    const initialLang = localStorage.getItem('site_lang') || 'sr';
+
     langButtons.forEach(button => {
         button.addEventListener('click', (e) => {
             e.preventDefault();
             const selectedLang = button.getAttribute('data-lang') || 'sr';
-
-            // IMPORTANT: Synchronously update global state first
-            window.currentLang = selectedLang;
-            localStorage.setItem('site_lang', selectedLang);
-
-            // Update UI active class
-            langButtons.forEach(btn => {
-                if (btn.getAttribute('data-lang') === selectedLang) {
-                    btn.classList.add('active');
-                } else {
-                    btn.classList.remove('active');
-                }
-            });
-
-            document.documentElement.lang = selectedLang;
-
-            // 1. Apply static translations across the page
-            window.applyTranslations();
-
-            // 2. Re-render dynamic Sanity CMS route and fleet cards immediately
-            if (typeof window.refreshDynamicContent === 'function') {
-                window.refreshDynamicContent();
-            }
-
-            // Automatically close mobile menu overlay if active
-            const menuOverlay = document.getElementById('menuOverlay');
-            if (menuOverlay) {
-                menuOverlay.classList.remove('active');
-            }
-            document.body.style.overflow = '';
+            window.setLanguage(selectedLang);
         });
     });
+
+    // Initialize initial language and translate elements
+    window.setLanguage(initialLang);
+});

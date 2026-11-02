@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.scrollTo(0, 0);
 
     // ==========================================
-    // SANITY API CONFIGURATION & BUFFERS
+    // SANITY API CONFIGURATION
     // ==========================================
     const SANITY_PROJECT_ID = 'b3mwp543';
     const DATASET = 'production';
@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Helper: Safely get current active language (defaults to 'sr')
     const getActiveLang = () => {
-        return window.currentLang || 'sr';
+        return window.currentLang || localStorage.getItem('site_lang') || 'sr';
     };
 
     // Helper: Safely trigger translation update from lang.js if available
@@ -64,11 +64,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const lang = getActiveLang();
 
         grid.innerHTML = globalFleetData.map(car => {
-            // Pick language-specific field or fallback to Serbian/English/default
-            const name = car[`name_${lang}`] || car.name_sr || car.name_en || car.name || '';
-            const desc = car[`description_${lang}`] || car.description_sr || car.description_en || car.description || 'Wi-Fi • Klima';
-            const pax = car[`passengerCapacity_${lang}`] || car.passengerCapacity_sr || car.passengerCapacity_en || car.passengerCapacity || '';
-            const luggage = car[`luggageCapacity_${lang}`] || car.luggageCapacity_sr || car.luggageCapacity_en || car.luggageCapacity || '';
+            // Pick language-specific field or fallback to English/Serbian/default
+            const name = car[`name_${lang}`] || car.name_en || car.name_sr || car.name || '';
+            const desc = car[`description_${lang}`] || car.description_en || car.description_sr || car.description || 'Wi-Fi • Klima';
+            const pax = car[`passengerCapacity_${lang}`] || car.passengerCapacity_en || car.passengerCapacity_sr || car.passengerCapacity || '';
+            const luggage = car[`luggageCapacity_${lang}`] || car.luggageCapacity_en || car.luggageCapacity_sr || car.luggageCapacity || '';
 
             return `
                 <div class="fleet-card">
@@ -132,15 +132,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const lang = getActiveLang();
         const langData = (window.translations && window.translations[lang]) ? window.translations[lang] : {};
 
-        // Dynamic language strings from dictionary with fallback defaults
-        const fromPrefixText = langData.route_from_prefix || 'Iz';
         const oneWayText = langData.route_oneway || '(u jednom pravcu)';
         const bookRouteText = langData.route_book || 'Rezerviši rutu';
 
         grid.innerHTML = globalRoutesData.map((route, index) => {
-            // Select language-specific field or fallback to Serbian/English
-            const destination = route[`destination_${lang}`] || route.destination_sr || route.destination_en || route.destination || '';
-            const departure = route[`departure_${lang}`] || route.departure_sr || route.departure_en || route.departure || '';
+            // Select language-specific field or fallback to English/Serbian
+            const destination = route[`destination_${lang}`] || route.destination_en || route.destination_sr || route.destination || '';
+            const departure = route[`departure_${lang}`] || route.departure_en || route.departure_sr || route.departure || '';
 
             return `
                 <div class="route-card ${index >= 3 ? 'extra-route' : ''}">
@@ -148,11 +146,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="route-info">
                             <h3>${destination}</h3>
                             <span class="route-from">
-                                <span data-key="route_from_prefix">${fromPrefixText}</span> ${departure}
+                                ${departure}
                             </span>
                             <div class="route-details-row">
                                 <div class="route-price">
-                                    € ${route.price} <span data-key="route_oneway">${oneWayText}</span>
+                                    € ${route.price} <span>${oneWayText}</span>
                                 </div>
                                 <div class="route-time"><span class="clock-icon">⏱</span> ~ ${route.duration}</div>
                             </div>
@@ -162,7 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         </a>
                     </div>
                     <div class="route-bottom">
-                        <a href="#booking" class="book-route-link" data-key="route_book">${bookRouteText}</a>
+                        <a href="#booking" class="book-route-link">${bookRouteText}</a>
                         <a href="#booking" class="route-arrow-btn desktop-arrow" aria-label="Book Route">
                             <img src="assets/arrow-yellow.svg" alt="Arrow" class="rotated-arrow">
                         </a>
@@ -171,7 +169,7 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
         }).join('');
 
-        // Manage "View all routes" button visibility (> 3 cards) and multi-lang text
+        // Manage "View all routes" button visibility (> 3 cards)
         if (routesFooter) {
             if (globalRoutesData.length <= 3) {
                 routesFooter.style.display = 'none';
@@ -181,7 +179,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (toggleBtnText) {
                     const key = isExpanded ? 'show_less_routes' : 'view_all_routes';
                     toggleBtnText.setAttribute('data-key', key);
-                    toggleBtnText.textContent = langData[key] || (isExpanded ? 'Prikaži manje ruta' : 'Prikaži sve rute');
+                    toggleBtnText.textContent = langData[key] || (isExpanded ? 'Show less routes' : 'View all routes');
                 }
             }
         }
@@ -218,7 +216,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Execute initial fetch calls
     fetchFleet();
     fetchRoutes();
-    
     // ==========================================
     // 3. WHATSAPP BOOKING FORM HANDLER & RELOAD RESET
     // ==========================================
