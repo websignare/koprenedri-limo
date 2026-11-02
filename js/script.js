@@ -405,5 +405,31 @@ document.addEventListener('DOMContentLoaded', () => {
                 behavior: 'smooth'
             });
         });
+
+    // ==========================================
+    // 9. MENU TOGGLE FUNCTIONALITY
+    // ==========================================
+    const menuToggle = document.getElementById('menuToggle');
+    const menuClose = document.getElementById('menuClose');
+    const menuOverlay = document.getElementById('menuOverlay');
+    const menuLinks = document.querySelectorAll('.menu-link');
+
+    if (menuToggle && menuOverlay) {
+        menuToggle.addEventListener('click', () => {
+            menuOverlay.classList.add('active');
+        });
     }
+
+    if (menuClose && menuOverlay) {
+        menuClose.addEventListener('click', () => {
+            menuOverlay.classList.remove('active');
+        });
+    }
+
+    menuLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            menuOverlay.classList.remove('active');
+        });
+    });
 });
+
