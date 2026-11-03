@@ -373,7 +373,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 `👤 *Name:* ${clientName}%0a` +
                 `📞 *Phone:* ${clientPhone}`;
 
-            const whatsappNumber = '381616545225';
+            const whatsappNumber = '38268888832';
             const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${message}`;
             window.open(whatsappUrl, '_blank');
         });
