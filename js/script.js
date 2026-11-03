@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const observeDynamicCards = (container) => {
         if (!container) return;
-        container.querySelectorAll('.route-card, .fleet-card').forEach(el => {
+        container.querySelectorAll('.route-card, .fleet-card, .faq-item').forEach(el => {
             el.classList.add('reveal-on-scroll');
             scrollObserver.observe(el);
         });
@@ -225,61 +225,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // Expose global re-render function for lang.js to call when language buttons are clicked
-    window.refreshDynamicContent = () => {
-        renderFleet();
-        renderRoutes();
-        renderFaqs(); // Added renderFaqs
-    };
-
-    // Execute initial fetch calls
-    fetchFleet();
-    fetchRoutes();
-    fetchFaqs(); // Added fetchFaqs
-
-
     // ==========================================
-    // 3. WHATSAPP BOOKING FORM HANDLER & RELOAD RESET
-    // ==========================================
-    const bookingForm = document.getElementById('whatsappBookingForm');
-
-    if (bookingForm) {
-        // Automatically reset form fields on page load/reload
-        bookingForm.reset();
-
-        bookingForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-
-            const pickup = document.getElementById('pickup').value;
-            const destination = document.getElementById('destination').value;
-            const date = document.getElementById('date').value;
-            const time = document.getElementById('time').value;
-            const passengers = document.getElementById('passengers').value;
-            const luggage = document.getElementById('luggage').value;
-            const flight = document.getElementById('flight').value || 'N/A';
-            const clientName = document.getElementById('clientName').value;
-            const clientPhone = document.getElementById('clientPhone').value;
-
-            const message = 
-                `*New Transfer Inquiry* %0a%0a` +
-                `📍 *From:* ${pickup}%0a` +
-                `🏁 *To:* ${destination}%0a` +
-                `📅 *Date:* ${date}%0a` +
-                `⏰ *Time:* ${time}%0a` +
-                `👥 *Passengers:* ${passengers}%0a` +
-                `🧳 *Luggage:* ${luggage}%0a` +
-                `✈️ *Flight No:* ${flight}%0a` +
-                `👤 *Name:* ${clientName}%0a` +
-                `📞 *Phone:* ${clientPhone}`;
-
-            const whatsappNumber = '381616545225';
-            const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${message}`;
-            window.open(whatsappUrl, '_blank');
-        });
-    }
-    
-    // ==========================================
-    // 4. FAQ ACCORDION & SCROLL-AWAY RESET LOGIC
+    // 3. FAQ ACCORDION & SCROLL-AWAY RESET LOGIC
     // ==========================================
     const rebindFaqAccordion = () => {
         const faqItems = document.querySelectorAll('.faq-item');
@@ -299,20 +246,24 @@ document.addEventListener('DOMContentLoaded', () => {
             const questionBtn = item.querySelector('.faq-question');
             const icon = item.querySelector('.faq-icon');
 
-            questionBtn.addEventListener('click', () => {
-                const isActive = item.classList.contains('active');
-                closeAllFaqs();
+            if (questionBtn) {
+                questionBtn.addEventListener('click', () => {
+                    const isActive = item.classList.contains('active');
+                    closeAllFaqs();
 
-                if (!isActive) {
-                    item.classList.add('active');
-                    icon.textContent = '-';
-                    questionBtn.setAttribute('aria-expanded', 'true');
+                    if (!isActive) {
+                        item.classList.add('active');
+                        if (icon) icon.textContent = '-';
+                        questionBtn.setAttribute('aria-expanded', 'true');
 
-                    requestAnimationFrame(() => {
-                        faqSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    });
-                }
-            });
+                        requestAnimationFrame(() => {
+                            if (faqSection) {
+                                faqSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            }
+                        });
+                    }
+                });
+            }
         });
 
         if (faqSection && !window.faqObserverBound) {
@@ -376,7 +327,60 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // ==========================================
-    // 5. COPY PHONE NUMBER WITH FLOATING TOOLTIP
+    // 4. EXPOSE RE-RENDER CALLBACK & INITIAL FETCH
+    // ==========================================
+    window.refreshDynamicContent = () => {
+        if (typeof renderFleet === 'function') renderFleet();
+        if (typeof renderRoutes === 'function') renderRoutes();
+        if (typeof renderFaqs === 'function') renderFaqs();
+    };
+
+    // Execute initial fetch calls after functions are declared
+    fetchFleet();
+    fetchRoutes();
+    fetchFaqs();
+
+    // ==========================================
+    // 5. WHATSAPP BOOKING FORM HANDLER & RELOAD RESET
+    // ==========================================
+    const bookingForm = document.getElementById('whatsappBookingForm');
+
+    if (bookingForm) {
+        bookingForm.reset();
+
+        bookingForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const pickup = document.getElementById('pickup').value;
+            const destination = document.getElementById('destination').value;
+            const date = document.getElementById('date').value;
+            const time = document.getElementById('time').value;
+            const passengers = document.getElementById('passengers').value;
+            const luggage = document.getElementById('luggage').value;
+            const flight = document.getElementById('flight').value || 'N/A';
+            const clientName = document.getElementById('clientName').value;
+            const clientPhone = document.getElementById('clientPhone').value;
+
+            const message = 
+                `*New Transfer Inquiry* %0a%0a` +
+                `📍 *From:* ${pickup}%0a` +
+                `🏁 *To:* ${destination}%0a` +
+                `📅 *Date:* ${date}%0a` +
+                `⏰ *Time:* ${time}%0a` +
+                `👥 *Passengers:* ${passengers}%0a` +
+                `🧳 *Luggage:* ${luggage}%0a` +
+                `✈️ *Flight No:* ${flight}%0a` +
+                `👤 *Name:* ${clientName}%0a` +
+                `📞 *Phone:* ${clientPhone}`;
+
+            const whatsappNumber = '381616545225';
+            const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${message}`;
+            window.open(whatsappUrl, '_blank');
+        });
+    }
+
+    // ==========================================
+    // 6. COPY PHONE NUMBER WITH FLOATING TOOLTIP
     // ==========================================
     const phoneLinks = document.querySelectorAll('.copy-phone');
     const copyTooltip = document.getElementById('copyTooltip');
@@ -400,7 +404,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ==========================================
-    // 6. LUXURY SCROLL REVEAL OBSERVER
+    // 7. LUXURY SCROLL REVEAL OBSERVER
     // ==========================================
     const revealElements = document.querySelectorAll(
         '.section-header, .step-card, .faq-item, .booking-form-box, .intro-text-content, .footer-cta-banner'
@@ -412,7 +416,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ==========================================
-    // 7. NAV COLOR SWITCHING ON SCROLL
+    // 8. NAV COLOR SWITCHING ON SCROLL
     // ==========================================
     const siteHeader = document.querySelector('.site-header');
     const logoImg = siteHeader ? siteHeader.querySelector('.logo-icon') : null;
@@ -450,7 +454,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ==========================================
-    // 8. SCROLL TO TOP BUTTON (FOOTER TRIGGER)
+    // 9. SCROLL TO TOP BUTTON (FOOTER TRIGGER)
     // ==========================================
     const scrollToTopBtn = document.getElementById('scrollToTopBtn');
     const footerSection = document.getElementById('footer');
@@ -479,7 +483,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ==========================================
-    // 9. MENU TOGGLE FUNCTIONALITY
+    // 10. MENU TOGGLE FUNCTIONALITY
     // ==========================================
     const menuToggle = document.getElementById('menuToggle');
     const menuClose = document.getElementById('menuClose');
