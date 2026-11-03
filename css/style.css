@@ -1245,9 +1245,9 @@ a {
     margin-bottom: 0rem; 
 }
 @media (max-width: 758px) {
-    .routes-grid{
+    /* .routes-grid{
         margin-bottom: -1.5rem;
-    }
+    } */
     .routes-section.expanded .routes-grid {
         margin-bottom: 1rem; 
     }   
