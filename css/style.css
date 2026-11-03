@@ -1169,11 +1169,14 @@ a {
 }
 
 .fleet-img-wrapper img {
-    width: 100%;
+    width: calc(100% + 50px);
     height: 100%;
     object-fit: cover;
     position: absolute;
-    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); /* Smooth zoom transition */
+    left: -15px;
+    top: 0;
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    transform: translateX(25px) scale(1.1);
 }
 
 /* Slight zoom on hover for the image */
