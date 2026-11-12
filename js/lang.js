@@ -42,6 +42,7 @@ window.translations = {
         form_flight: "Flight number (optional)",
         form_name: "Name *",
         form_phone: "Phone / WhatsApp *",
+        client_name_placeholder: "Your name",
         form_submit: "Send Inquiry",
         booking_desc_title: "Seamless journeys across Montenegro.",
         booking_desc: "Whether arriving at Tivat or Podgorica, our local drivers ensure a premium, stress-free transfer experience to your hotel or city destination. Fill in the form for a fast fixed-rate confirmation.",
@@ -122,6 +123,7 @@ window.translations = {
         form_flight: "Broj leta (opciono)",
         form_name: "Ime *",
         form_phone: "Telefon / WhatsApp *",
+        client_name_placeholder: "Vaše ime",
         form_submit: "Pošaljite upit",
         booking_desc_title: "Besprekorna putovanja širom Crne Gore.",
         booking_desc: "Bilo da stižete na aerodrom Tivat ili Podgorica, naši lokalni vozači obezbeđuju premium, opušteno iskustvo transfera do vašeg hotela ili grada. Popunite formu za brzu potvrdu po fiksnoj ceni.",
@@ -202,6 +204,7 @@ window.translations = {
         form_flight: "Номер рейса (необязательно)",
         form_name: "Имя *",
         form_phone: "Телефон / WhatsApp *",
+        client_name_placeholder: "Ваше имя",
         form_submit: "Отправить запрос",
         booking_desc_title: "Комфортные поездки по всей Черногории.",
         booking_desc: "Прибываете ли вы в Тиват или Подгорицу, наши местные водители обеспечат премиальный и спокойный трансфер в ваш отель или город. Заполните форму для быстрого подтверждения по фиксированной цене.",
@@ -282,6 +285,7 @@ window.translations = {
         form_flight: "Numéro de vol (optionnel)",
         form_name: "Nom *",
         form_phone: "Téléphone / WhatsApp *",
+        client_name_placeholder: "Votre nom",
         form_submit: "Envoyer la demande",
         booking_desc_title: "Voyages fluides à travers le Monténégro.",
         booking_desc: "Qu'vous arriviez à Tivat ou Podgorica, nos chauffeurs locaux garantissent un transfert haut de gamme et sans stress vers votre hôtel ou votre ville. Remplissez le formulaire pour une confirmation rapide à tarif fixe.",
@@ -332,11 +336,17 @@ window.applyTranslations = function(container) {
     if (!langData) return;
 
     root.querySelectorAll('[data-key]').forEach(el => {
-        const key = el.getAttribute('data-key');
-        if (langData[key]) {
-            el.innerHTML = langData[key];
-        }
-    });
+       const key = el.getAttribute('data-key');
+       if (langData[key]) {
+           // If the element is an input, update the placeholder
+           if (el.tagName === 'INPUT' && el.hasAttribute('placeholder')) {
+               el.placeholder = langData[key];
+           } else {
+               // Otherwise, update the inner content
+               el.innerHTML = langData[key];
+           }
+       }
+   });
 };
 
 /**
