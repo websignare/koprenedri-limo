@@ -403,6 +403,19 @@ a {
     opacity: 0.85;
     width: 100%;
 }
+.location-map-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.location-map-link:hover {
+    opacity: 1;
+}
 @media (min-width: 1024px){
     .hero-footer-location {
         padding: 0 1.5rem 2rem 6.5rem;
